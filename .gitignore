@@ -1,0 +1,35 @@
+# Maven
+target/
+*.jar
+*.war
+!*.jar.original
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Logs
+*.log
+logs/
+
+# Env files (contains secrets)
+.env
+.env.local
+application-local.yml
+application-dev.yml
+
+# Test reports
+test-output/
