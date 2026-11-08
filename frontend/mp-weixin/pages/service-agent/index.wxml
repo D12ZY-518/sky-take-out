@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="hero"><view class="hero-kicker">HE XIANG · SERVICE</view><view class="hero-title">售后问题，我们一起理清</view><view class="hero-subtitle">先查订单与明细，再判断是否需要转交人工处理。</view></view>
+  <view class="notice">本地演示用户 1 · 会调用模型并产生费用。创建工单会写入演示库；此页未接入旧小程序的微信登录令牌。</view>
+  <view class="examples">
+    <button size="mini" data-text="我的订单有哪些？" bindtap="useExample">我的订单有哪些？</button>
+    <button size="mini" data-text="刚才那单有什么菜？" bindtap="useExample">刚才那单有什么菜？</button>
+    <button size="mini" data-text="订单有问题，该怎么处理？" bindtap="useExample">订单有问题怎么办？</button>
+  </view>
+  <scroll-view class="messages" scroll-y="true" scroll-into-view="{{lastMessageId}}">
+    <block wx:for="{{messages}}" wx:key="id">
+      <view id="{{item.id}}" class="row {{item.role}}">
+        <view class="bubble">
+          <text>{{item.text}}</text>
+          <view wx:if="{{item.tools.length}}" class="tools">本轮工具：{{item.toolsText}}</view>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+  <view class="composer">
+    <textarea class="input" value="{{draft}}" bindinput="onInput" maxlength="2000" placeholder="例如：帮我查最近的订单" auto-height="true" />
+    <view class="buttons"><button type="primary" bindtap="send" disabled="{{busy}}">发送</button><button bindtap="retry" disabled="{{busy || !pending}}">同 ID 重试</button><button bindtap="newSession" disabled="{{busy}}">新会话</button></view>
+    <view class="status">{{status}}</view>
+  </view>
+</view>

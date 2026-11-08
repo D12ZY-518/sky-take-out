@@ -1,0 +1,17 @@
+# Python 镜像构建上下文为 python-agent/：模型权重与向量数据走 volume 挂载，不进镜像
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+models/
+chroma_data/
+*.npy
+faq_index.json
+# 测试/自检脚本不进生产镜像
+selftest.py
+accept_e2e.py
+test_faq_rag.py
+# 验收原始报告只保留本机，避免后续重建时复制进应用层。
+eval/runs/

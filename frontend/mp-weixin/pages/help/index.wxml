@@ -1,0 +1,21 @@
+<view class="help-page">
+  <view class="intro">
+    <view class="intro-kicker">HE XIANG · HELP CENTER</view>
+    <view class="intro-title">需要什么帮助？</view>
+    <view class="intro-subtitle">订单相关问题，建议先从对应订单进入咨询。</view>
+  </view>
+  <view class="section-title">按问题找入口</view>
+  <view class="help-card">
+    <navigator class="help-row" url="/pages/historyOrder/historyOrder">
+      <view class="help-icon">单</view>
+      <view class="help-copy"><view class="help-label">查看我的订单</view><view class="help-hint">找到订单后，从详情页描述具体问题</view></view>
+      <text class="arrow">›</text>
+    </navigator>
+    <navigator class="help-row" url="/pages/service-agent/index">
+      <view class="help-icon agent-icon">问</view>
+      <view class="help-copy"><view class="help-label">咨询智能客服</view><view class="help-hint">查询订单、明细和常见问题</view></view>
+      <text class="arrow">›</text>
+    </navigator>
+  </view>
+  <view class="demo-note">本页为本地演示：智能客服尚未接入小程序真实登录，默认使用演示用户 1。涉及退款、支付或工单结果时，请以系统实际记录为准。</view>
+</view>

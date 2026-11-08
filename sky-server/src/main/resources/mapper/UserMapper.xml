@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.UserMapper">
+    <!-- 每日新增用户：别名对齐 Service 取的 key（count/date）；区间含 begin 当天、不含 end 次日 -->
+    <select id="getNewUserByDate" resultType="java.util.Map">
+        select count(id) count, date(create_time) date
+        from user
+        where create_time >= #{begin} and create_time &lt; DATE_ADD(#{end}, INTERVAL 1 DAY)
+        group by date(create_time)
+    </select>
+</mapper>

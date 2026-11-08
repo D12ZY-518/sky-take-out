@@ -1,0 +1,8 @@
+# Java 镜像构建上下文为【项目根】，此处排除所有构建无关内容：
+# python-agent 下有 2.2GB 模型权重，若不排除会被整体发给 Docker daemon，build 直接卡死/撑爆
+.git/
+**/target/
+.idea/
+*.iml
+*.log
+python-agent/

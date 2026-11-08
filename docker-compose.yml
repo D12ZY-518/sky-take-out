@@ -1,0 +1,118 @@
+# 禾巷餐饮本地编排：MySQL + Redis + Java(sky-server) + Python Agent
+#
+# 启动：  docker compose up -d --build
+# 查看：  docker compose ps / docker compose logs -f java-app
+# 停止：  docker compose down          （保留 MySQL 数据卷）
+# 清库重来：docker compose down -v       （删除数据卷，MySQL 会重新执行 sky-take-out.sql）
+#
+# 端口：宿主 8080=Java（含 ai-chat.html 测试页）、8000=Python Agent（仅本机联调）、
+#       3307=容器 MySQL（本机 3306 已被宿主机 MySQL 占用）、6379=Redis
+
+name: sky-take-out
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sky-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      # /docker-entrypoint-initdb.d/ 下的脚本按文件名排序、只在数据卷【首次为空】时自动执行
+      - ./sky-take-out.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./docker/seed/02-sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro
+      - ./docker/seed/03-legacy-catalog.sql:/docker-entrypoint-initdb.d/03-legacy-catalog.sql:ro
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123456"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks: [sky-net]
+
+  redis:
+    image: redis:7-alpine
+    container_name: sky-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [sky-net]
+
+  java-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.java
+    image: sky-take-out-java:1.0
+    container_name: sky-java
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      # 覆盖 application-dev.yml 中的占位符默认值，指向 compose 网络内的服务名
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: sky_take_out
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: "123456"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PYTHON_AGENT_BASE_URL: http://python-agent:8000
+      # 两个服务由同一个 Compose 变量注入共享令牌。
+      INTERNAL_TOKEN: ${SKY_INTERNAL_TOKEN:-dev-internal-token-123}
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy   # Java 启动即连库，必须等 MySQL 初始化完成
+      redis:
+        condition: service_healthy
+    networks: [sky-net]
+
+  python-agent:
+    build:
+      context: ./python-agent
+    image: sky-take-out-python-agent:1.0
+    container_name: sky-python-agent
+    restart: unless-stopped
+    env_file:
+      # 读取 DEEPSEEK_API_KEY 等（.env 不进镜像、不进 git）
+      - ./python-agent/.env
+    environment:
+      # environment 优先级高于 env_file：.env 里的 localhost 值在此被强制改写
+      TZ: Asia/Shanghai
+      JAVA_BASE_URL: http://java-app:8080
+      MOCK_JAVA: "0"
+      # Compose 统一服务间令牌，不依赖两个容器各自的默认值恰好相同。
+      INTERNAL_TOKEN: ${SKY_INTERNAL_TOKEN:-dev-internal-token-123}
+    volumes:
+      # bge-m3 权重 2.2GB + Chroma 持久化目录：挂载宿主机已有资源，不打进镜像
+      - ./python-agent/models:/app/models
+      - ./python-agent/chroma_data:/app/chroma_data
+    ports:
+      # Agent 只接受 Java 服务调用；保留回环映射是为了本机验收，不向局域网暴露。
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - java-app    # Python 启动期不连 Java，普通 started 依赖即可
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health',timeout=3).status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks: [sky-net]
+
+networks:
+  sky-net:
+    driver: bridge
+
+volumes:
+  mysql-data:

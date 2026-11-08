@@ -1,0 +1,9 @@
+# 直依赖（本服务代码 import 的包）；版本为本机已验证版本，Python 3.14
+fastapi==0.141.1
+uvicorn==0.52.4
+langchain==1.3.14
+langchain-openai==1.6.0
+langgraph==1.2.10
+httpx==0.28.1
+python-dotenv==1.2.3
+numpy==2.5.1

@@ -1,0 +1,27 @@
+**/target/
+.idea
+*.iml
+*.class
+# IDE 与本地运行产物
+.vscode/
+*.log
+# Redis 快照（本地运行时生成，不入库）
+dump.rdb
+
+# Python（python-agent 子目录）
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+# RAG 资源（大模型权重 + 向量缓存，不入库）
+models/
+*.npy
+faq_index.json
+chroma_data/
+# 本地浏览器验收产物
+.playwright-cli/
+output/playwright/
+# Agent 评测报告可能包含模型回复与本地运行环境信息
+python-agent/eval/runs/

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.OrderMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into orders (number,status,user_id,address_book_id,order_time,checkout_time,pay_method,pay_status,amount,remark,phone,address,consignee,estimated_delivery_time,delivery_status,pack_amount,tableware_number,tableware_status)
+        values (#{number}, #{status}, #{userId}, #{addressBookId}, #{orderTime}, #{checkoutTime}, #{payMethod}, #{payStatus}, #{amount}, #{remark}, #{phone}, #{address}, #{consignee}, #{estimatedDeliveryTime}, #{deliveryStatus}, #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
+    </insert>
+
+    <update id="update" >
+        update orders
+        <set> 
+             <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+             <if test="rejectionReason != null">rejection_reason = #{rejectionReason},</if>
+             <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+             <if test="payStatus != null">pay_status = #{payStatus},</if>
+             <if test="payMethod != null">pay_method = #{payMethod},</if>
+             <if test="checkoutTime != null">checkout_time = #{checkoutTime},</if>
+             <if test="status != null">status = #{status},</if>
+             <if test="deliveryTime != null">delivery_time = #{deliveryTime},</if>
+        </set>  
+        where id = #{id}
+    </update>
+
+    <select id="pageQuery" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <if test="status != null">and status = #{status}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
+            <if test="phone != null">and phone like concat('%',#{phone},'%')</if>
+            <if test="number != null">and number like concat('%',#{number},'%')</if>    
+        </where>
+        order by order_time desc
+    </select>
+
+    <!-- 订单统计：orders 才有 order_time/status/amount；营业额与有效订单都只统计已完成(status=5) -->
+    <select id="getOrderCountByDate" resultType="java.util.Map">
+        select count(id) orderCount, date(order_time) date
+        from orders
+        where order_time >= #{begin} and order_time &lt; DATE_ADD(#{end}, INTERVAL 1 DAY)
+        group by date(order_time)
+    </select>
+
+    <select id="getValidOrderCountByDate" resultType="java.util.Map">
+        select count(id) validOrderCount, date(order_time) date
+        from orders
+        where status = 5
+        and order_time >= #{begin} and order_time &lt; DATE_ADD(#{end}, INTERVAL 1 DAY)
+        group by date(order_time)
+    </select>
+
+    <select id="getTurnoverByDate" resultType="java.util.Map">
+        select sum(amount) turnover, date(order_time) date
+        from orders
+        where status = 5
+        and order_time >= #{begin} and order_time &lt; DATE_ADD(#{end}, INTERVAL 1 DAY)
+        group by date(order_time)
+    </select>
+
+    <!-- 销量Top10：order_detail 记录菜品，但时间/状态过滤条件在 orders 上，必须联查 -->
+    <select id="getTop10" resultType="java.util.Map">
+        select od.name name, sum(od.number) number
+        from order_detail od, orders o
+        where od.order_id = o.id
+        and o.status = 5
+        and o.order_time >= #{begin} and o.order_time &lt; DATE_ADD(#{end}, INTERVAL 1 DAY)
+        group by od.name
+        order by number desc
+        limit 10
+    </select>
+</mapper>

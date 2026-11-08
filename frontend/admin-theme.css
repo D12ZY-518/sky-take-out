@@ -1,0 +1,35 @@
+/* 本地旧商家端的禾巷主题覆盖层；不修改课程编译产物。 */
+:root { --hx-green:#195a49; --hx-deep:#123e35; --hx-cream:#f7f5ee; --hx-line:#e6ebe3; --hx-ink:#203a33; }
+body { color:var(--hx-ink); background:var(--hx-cream); font-family:"Microsoft YaHei",system-ui,sans-serif; }
+
+/* 原登录页的课程菜品大图改为自己的品牌叙事。 */
+.login { background:radial-gradient(circle at 18% 18%,#e6eee1 0,transparent 34%),linear-gradient(135deg,#f7f5ee,#e7eee7) !important; }
+.login-box { width:min(1040px,calc(100vw - 72px)) !important; min-height:520px; border-radius:28px; overflow:hidden; box-shadow:0 28px 70px #123e3526; }
+.login-box > img { display:none !important; }
+.login-box::before { content:"禾巷餐饮\A 一餐一刻，巷里有温度。\A\A 智能售后 · 门店运营"; white-space:pre-line; box-sizing:border-box; display:flex; align-items:flex-start; justify-content:center; flex-direction:column; width:58%; padding:72px; color:#fff; font-size:30px; font-weight:700; line-height:1.5; letter-spacing:.03em; background:radial-gradient(circle at 82% 18%,#5eab8938 0,transparent 36%),linear-gradient(145deg,#205f4d,#103e35); }
+.login-form { width:42% !important; min-height:520px; background:#fffdf8 !important; }
+.login-form-title { flex-direction:column; align-items:flex-start !important; height:auto !important; margin-bottom:28px; }
+.login-form-title::after { content:"门店运营工作台"; display:block; color:#70837b; font-size:12px; font-weight:500; margin-top:9px; letter-spacing:.08em; white-space:nowrap; }
+.login-form .el-input__inner { border:1px solid var(--hx-line) !important; border-radius:10px !important; background:#f7faf6 !important; height:44px !important; }
+.login-form .el-input__inner:focus { border-color:#5f9b7e !important; }
+.login-btn,.el-button--primary { background:var(--hx-green) !important; border-color:var(--hx-green) !important; color:#fff !important; border-radius:10px !important; }
+.login-btn:hover,.el-button--primary:hover { background:#26715c !important; border-color:#26715c !important; }
+
+/* 工作台和管理列表保留原功能布局，只覆盖强识别性的旧配色/卡片形态。 */
+.navbar { background:#f4f7f0 !important; border-bottom:1px solid var(--hx-line); color:var(--hx-ink) !important; }
+.sidebar-container,.sidebar-container .el-menu { background:var(--hx-deep) !important; }
+.sidebar-container .el-menu .el-menu-item { color:#d9e8dc !important; border-radius:10px !important; margin:0 12px 12px !important; padding-left:15px !important; }
+.sidebar-container .el-menu .el-menu-item:hover { background:#276452 !important; color:#fff !important; }
+.sidebar-container .el-menu .router-link-active .el-menu-item { background:#e8f1e8 !important; color:var(--hx-deep) !important; }
+.sidebar-container .el-menu .router-link-active .el-menu-item span { color:var(--hx-deep) !important; }
+.main-container,.dashboard-container { background:var(--hx-cream) !important; }
+.dashboard-container > div,.dashboard-container .el-card,.dashboard-container .container { border-radius:16px; }
+.el-table th { background:#eef3ec !important; color:#36564a !important; }
+.el-table td { border-bottom-color:var(--hx-line) !important; }
+.el-input__inner:focus { border-color:#5f9b7e !important; }
+
+@media(max-width:760px) {
+  .login-box { width:calc(100vw - 32px) !important; min-height:0; }
+  .login-box::before { display:none; }
+  .login-form { width:100% !important; min-height:470px; }
+}

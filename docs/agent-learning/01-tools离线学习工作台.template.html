@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent 工具层 · 离线学习工作台</title>
+  <style>
+    :root{color-scheme:light;--ink:#18283b;--muted:#5d7082;--line:#dbe5eb;--paper:#f3f7f7;--card:#fff;--teal:#087f79;--teal-dark:#075b59;--gold:#c8862c;--code:#142538;--shadow:0 18px 45px rgba(28,62,80,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 9% 3%,#e1f5ef 0,transparent 25%),radial-gradient(circle at 96% 12%,#e7edf9 0,transparent 27%),var(--paper);color:var(--ink);font:16px/1.72 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    button,textarea{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh;max-width:1600px;margin:auto}.sidebar{position:sticky;top:0;align-self:start;height:100vh;padding:31px 18px;background:#102b3c;color:#ecf8f6;overflow:auto}.brand{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#a5dcd0;font-weight:800}.sidebar h1{font-size:23px;line-height:1.3;margin:13px 0 9px}.sidebar .sub{font-size:13px;color:#b7ced6;margin:0 0 27px}.nav{display:grid;gap:7px}.nav button{text-align:left;border:1px solid transparent;background:transparent;color:#d8e8ea;border-radius:11px;padding:11px 12px}.nav small{display:block;color:#9fc1c5;font-size:11px}.nav button:hover,.nav button.active{background:#1e4651;border-color:#39736d;color:#fff}.sidefoot{margin-top:28px;border-top:1px solid #315260;padding-top:19px;font-size:12px;color:#bdd2d7}.meter{height:8px;border-radius:30px;background:#315361;overflow:hidden;margin:12px 0}.meter span{display:block;height:100%;background:#6ee1c4;width:0%;transition:width .2s}.main{min-width:0;padding:32px clamp(18px,4vw,62px) 80px}.topline{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}.eyebrow{font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-size:12px}.topline .stamp{font-size:12px;color:var(--muted);background:#e6eeef;padding:6px 10px;border-radius:20px}.hero{padding:25px 0 22px}.hero h2{font-size:clamp(32px,4vw,52px);line-height:1.15;margin:10px 0 13px;letter-spacing:-.035em}.hero p{color:var(--muted);max-width:900px;margin:0}.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 27px}.btn{border:1px solid #bfd2d7;background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:650;box-shadow:0 3px 10px rgba(21,60,72,.03)}.btn:hover{border-color:var(--teal);color:var(--teal-dark)}.btn.primary{background:var(--teal);border-color:var(--teal);color:white}.btn.primary:hover{background:var(--teal-dark)}.btn.warn{color:#9c4c21}.status{display:inline-flex;align-items:center;padding:9px 13px;background:#e9f6f1;border-radius:10px;color:#176758;font-size:13px}.status.bad{background:#fff0e9;color:#9b4b2d}.chapter{display:none;max-width:1110px}.chapter.active{display:block}.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:clamp(19px,3vw,31px);box-shadow:var(--shadow);margin:0 0 20px}.panel h3{font-size:24px;line-height:1.3;margin:0 0 13px}.panel h4{font-size:18px;margin:25px 0 8px}.panel p{margin:9px 0}.panel ul,.panel ol{margin:8px 0 15px;padding-left:23px}.panel li{margin:4px 0}.checkpoint{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:17px}.checkpoint label{font-size:14px;color:var(--muted)}.checkpoint input{accent-color:var(--teal);width:18px;height:18px;vertical-align:middle}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px;min-width:590px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#eef6f4}.hidden-mode .explain{display:none}.hidden-mode .sourcebox{display:none}.hidden-mode .quiz{border-top:0;margin-top:0;padding-top:0}.endnote{color:var(--muted);font-size:13px;margin-top:28px}#full-source,#agent-run-source{display:none}#file-input{display:none}@media(max-width:860px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:19px}.nav{display:flex;overflow-x:auto}.nav button{white-space:nowrap;min-width:150px}.sidefoot{display:none}.main{padding-top:18px}.hero h2{font-size:34px}}@media print{.sidebar,.toolbar,.sourcebox,.question details{display:none}.shell{display:block}.main{padding:0}.chapter{display:block;break-after:page}.panel{box-shadow:none}}
+    .tag{display:inline-block;background:#e7f3f0;color:#08726e;border-radius:20px;padding:3px 9px;font-size:12px;font-weight:750}.tag.orange{background:#fff0d9;color:#8b5b19}code{font-family:Consolas,"Cascadia Code",monospace;background:#eaf0f2;padding:1px 4px;border-radius:4px;font-size:.91em}pre{margin:12px 0;overflow:auto;background:var(--code);color:#d9e9ee;border-radius:11px;padding:19px;line-height:1.55;font-size:13px;tab-size:4;white-space:pre}pre code{background:none;padding:0;color:inherit;font-size:inherit}.sourcebox{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--code);margin-top:18px}.sourcebox summary{list-style:none;background:#1e394b;color:#fff;padding:12px 16px;cursor:pointer;font-weight:700}.sourcebox summary::-webkit-details-marker{display:none}.sourcebox pre{margin:0;border-radius:0;max-height:700px}.sourcebar{font-size:12px;color:#b8d5df;padding:0 16px 12px}.quiz{border-top:1px solid var(--line);padding-top:22px;margin-top:24px}.quiz h4{margin:0 0 10px}.question{background:#fbfdfd;border:1px solid var(--line);padding:17px;border-radius:12px;margin:12px 0}.question .qtitle{font-weight:750}.question .qmeta{font-size:12px;color:var(--muted);margin-bottom:10px}.question textarea{display:block;width:100%;min-height:112px;border:1px solid #bdced5;border-radius:9px;background:#fff;padding:12px;color:var(--ink);resize:vertical;outline:none;margin-top:10px}.question textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px #d6f1eb}.question details{margin-top:12px;color:#34596a}.question summary{cursor:pointer;font-size:13px;font-weight:750;color:var(--teal-dark)}.question details p{font-size:13px;line-height:1.65;margin:6px 0 0}
+    .sourcebox .sourcehead{background:#1e394b;color:#fff;padding:12px 16px;font-weight:700}.sourcebox pre{max-height:none}
+    .story{border-left:4px solid var(--teal);background:#f6faf9;border-radius:9px;padding:13px 17px;margin:13px 0}.story h4{margin:0 0 5px}.story p{margin:5px 0}.story .proof{font-size:13px;color:#315367}.story .limit{font-size:13px;color:#8b542e}.story a{font-size:13px}.study-path{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}.study-path .mini{background:#edf7f4;padding:14px;border-radius:10px}.interview-note{background:#fff5e8;border:1px solid #f2d7ad;border-radius:10px;padding:13px 16px}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">SKY TAKEOUT / AGENT LAB</div>
+    <h1>Agent 学习工作台</h1>
+    <p class="sub">离线学习包 · Python Agent · 面试复盘</p>
+    <nav class="nav" aria-label="章节导航">
+      <button class="active" data-go="overview">00　使用方法<small>路线与现有进度</small></button>
+      <button data-go="interview">面试总复盘<small>改进、评测、Bad Case 一页串起来</small></button>
+      <button data-go="orders">01　查订单列表<small>身份、Mock、HTTP、响应</small></button>
+      <button data-go="detail">02　查订单明细<small>订单号与归属校验</small></button>
+      <button data-go="ticket">03　创建售后工单<small>写操作与事实边界</small></button>
+      <button data-go="faq">04　检索 FAQ<small>公共知识与 RAG</small></button>
+      <button data-go="review">05　综合复盘<small>面试、审计、改动题</small></button>
+      <button data-go="lab">06　独立验收<small>闭卷讲解、真实修改、证据</small></button>
+      <button data-go="source">附录　完整源码<small>生成时的源码快照</small></button>
+    </nav>
+    <div class="sidefoot"><div id="progress-text">已填写 0 / 0 题</div><div class="meter"><span id="progress-bar"></span></div><div id="save-side">正在检查本地保存…</div></div>
+  </aside>
+  <main class="main">
+    <div class="topline"><span class="eyebrow">从真实代码到独立讲解</span><span class="stamp" id="source-stamp">源码快照：读取中</span></div>
+    <div class="hero"><h2>从真实代码到面试表达</h2><p>先看“面试总复盘”，把几次评测和修复串成故事；不懂的点再回工具章节看完整代码。关掉讲解独立回答，导出作业集中批改。“已填写”只代表输入过内容，不代表掌握。</p></div>
+    <div class="toolbar"><button class="btn" id="focus-btn">开启闭卷模式</button><button class="btn primary" id="export-md">导出 Markdown 作业</button><button class="btn" id="export-json">导出 JSON 备份</button><button class="btn" id="import-json">导入 JSON 备份</button><input id="file-input" type="file" accept="application/json,.json"><span class="status" id="save-status" role="status">检查自动保存中</span></div>
+
+    <section class="chapter active" id="overview">
+      <div class="panel explain"><span class="tag">先读这里</span><h3>这份学习包怎么用</h3><p class="lead">每次只完成一个章节：先看章节顶部的真实完整方法，再读紧随其后的执行顺序讲解；最后点“闭卷模式”回答，导出 Markdown 给 AI 批改。</p>
+        <div class="flow"><span>Java 传入真实 userId</span><b>→</b><span>Agent 选择工具</span><b>→</b><span>LangChain 执行工具</span><b>→</b><span>订单/工单工具调 Java；FAQ 工具查 Chroma</span><b>→</b><span>模型组织回复</span></div>
+        <div class="grid"><div class="mini"><strong>已有学习记录</strong><br>main.py 的 chat()、agent.py 的 _get_agent() 和 run() 曾完成讲解；是否达到 L2 仍以本次闭卷复测为准。</div><div class="mini"><strong>本包目标</strong><br>说清 4 个工具的输入来源、执行分支、失败路径、事实来源和跨语言边界。</div><div class="mini"><strong>交作业标准</strong><br>尽量用自己的话回答；不知道就写“不知道”。AI 批改后才记录 L1～L4。</div></div>
+        <div class="callout"><strong>新的入口：</strong>先点左侧“面试总复盘”，只练 6 个综合问题；答不上来再回本页 01～06 章查代码。旧题和浏览器本地答案都保留。</div>
+        <div class="callout warn"><strong>接续点：</strong>上次停在 <code>body.get("data") or []</code>。请先完成 01 章的对应题目，不需要返回聊天里逐题作答。</div>
+        <h4>四个工具各负责什么</h4><div class="tablewrap"><table><thead><tr><th>工具</th><th>模型可填的主要参数</th><th>身份来源</th><th>真实数据源</th></tr></thead><tbody><tr><td>query_orders</td><td>status、limit</td><td>runtime.context.user_id</td><td>Java /internal/orders</td></tr><tr><td>query_order_detail</td><td>order_number</td><td>runtime.context.user_id</td><td>Java /internal/orders/{orderNumber}</td></tr><tr><td>create_ticket</td><td>category、content、order_number</td><td>runtime.context.user_id</td><td>Java /internal/tickets</td></tr><tr><td>query_faq</td><td>question</td><td>无需用户身份</td><td>faq_rag.search / Chroma</td></tr></tbody></table></div>
+        <p class="endnote">这个页面内嵌生成时的源码快照，后续项目代码若变化，需重新生成学习包。自动保存受浏览器对本地文件的支持影响；每次学习结束请导出 JSON 备份。</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="interview">
+      <div class="panel"><span class="tag orange">面试主线 · 先练这里</span><h3>不要背文档，练会讲 5 个项目故事</h3>
+        <div class="explain"><p>你之前没看那些分散文档，这不是“少读几篇”的问题，而是没有把证据转化成自己的表达。这里把每次改进压成 <strong>主张 → 证据 → 边界</strong>：面试时先说做了什么，再给可复现证据，最后主动讲没验证什么。数字是证据标签，不需要机械背诵；追问时要能找到来源。</p>
+          <div class="study-path"><div class="mini"><strong>① 看一张卡</strong><br>只读一个故事的三行信息。</div><div class="mini"><strong>② 闭卷讲 90 秒</strong><br>讲问题、定位、改动、验收和边界。</div><div class="mini"><strong>③ 回答反问</strong><br>下面 6 题自己写，不会就标“不知道”。</div><div class="mini"><strong>④ 交给我批改</strong><br>导出作业；我按事实、推理、边界逐点追问，不凭自评判通过。</div></div>
+          <div class="story"><h4>1 · Agent 怎样接入外卖业务</h4><p>模型负责选工具与生成回复；可信用户身份由 Java 登录链路传入 Python 的运行时上下文，订单和工单事实来自 Java 业务服务，不让模型直接写 MySQL。</p><p class="proof">证据：工具源码、Java 内部接口；Java 用户入口的同会话“查单→追问明细”已做自动化只读样本。旧小程序工作副本现有一个本地售后 Agent 页面，经 Java 入口调用 Python。</p><p class="limit">边界：小程序新增页目前未接入旧 UniApp 微信登录令牌，只使用演示用户 1；页面尚未在微信开发者工具里实测，不能当作真实微信身份链路验收。</p><a href="05-三项改进复现与面试讲解.md">复现与讲解原记录</a> · <a href="../../frontend/README.md">前端接入边界</a></div>
+          <div class="story"><h4>2 · 评测怎样避免“跑通即正确”</h4><p>分开看无网络契约测试、真实模型 + Mock Java 的行为评测、真实 Java/MySQL 链路；自动判分只是筛选，人工还要看模型是否越权承诺。</p><p class="proof">证据：历史干净提交 36 例/40 轮自动统计 19 pass、21 needs_review、0 fail/error；当前工作区全量样本统计相同，但人工仍发现 BC-AGENT-003/004。Java 27/27、Python 23/23 是另外一层测试，不可合并成“准确率”。</p><p class="limit">边界：旧干净提交与当前未提交工作区不是同一基线；0 fail 不等于零 Bad Case，21 个 needs_review 也不能算通过。</p><a href="../../python-agent/eval/README.md">评测原始说明</a> · <a href="../../python-agent/eval/BAD_CASES.md">Bad Case 台账</a></div>
+          <div class="story"><h4>3 · 真故障要沿链路归因</h4><p>曾遇到工具轨迹混入历史、内部 HTTP 受系统代理影响返回 502、MySQL 演示中文数据已乱码。三个现象处于不同层，不能一概归因为模型。</p><p class="proof">证据：<code>agent.run()</code> 改为只统计最后一条 HumanMessage 之后的工具；同 URL/令牌在 <code>trust_env=False</code> 下 200；MySQL 字段十六进制证明乱码已入库。</p><p class="limit">边界：工具轨迹修复的是 API 观测，不证明旧版重复查库；种子编码修复不自动修复旧卷全部字段。</p><a href="03-真实链路评测与失败归因练习.md">故障归因原记录</a></div>
+          <div class="story"><h4>4 · 写工单超时是“结果未知”</h4><p>Java 可能已提交而 Python 没收到响应。一次发送动作使用稳定 <code>requestId</code>，经 Python 透传；MySQL <code>UNIQUE(user_id, request_id)</code> 去重，重复且内容相同返回原工单号。</p><p class="proof">证据：真实 Java/MySQL 顺序重复 POST 得到同一工单号；同 ID 改内容被拒；库内只留一行。</p><p class="limit">边界：客户端重试若换 ID 仍可能建两张；未验证真实丢包、并发和完整模型写链路。</p><a href="05-三项改进复现与面试讲解.md">幂等复现原记录</a></div>
+          <div class="story"><h4>5 · RAG 命中不是业务真相</h4><p>旧 30 条演示 FAQ 含未核实支付和会员说法；默认换成 13 条保守问答与 <code>faq_grounded_v3</code>。模型仍曾把“能查订单”扩写成“能核对配送费/优惠券”，把微信支付对接代码说成渠道已可用，于是继续修复并加定点回归。</p><p class="proof">证据：FAQ 对账、BC-AGENT-003/004、FAQ-02/04/05 单例回归。</p><p class="limit">边界：源码不能替代运营政策或真实支付测试；定点回归不等于所有语义变体已覆盖。</p><a href="04-FAQ能力对账与面试复盘.md">FAQ 对账原记录</a></div>
+          <div class="interview-note"><strong>面试不要这样说：</strong>“Agent 准确率 100%”“所有重试都幂等”“已通过生产级安全测试”“仓库有支付代码所以一定支持微信支付”。更准确的说法是指出对应测试环境、观察值和未覆盖范围。</div>
+          <p><strong>原始材料怎么用：</strong>不用逐篇通读。闭卷卡住时点击对应记录，找代码、测试命令和真实输出，再返回本页用自己的话重讲。Redis/Java 缓存是另一条复习线，不把它混进 Agent 成绩；面试项目叙述也要区分两者。</p>
+        </div><div class="quiz" data-quiz="interview"><h4>面试闭卷 · 先做这 6 题</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="orders">
+      <div class="panel"><span class="tag">工具 1 / 查订单列表</span><h3>query_orders()：从用户身份到订单文本</h3>
+        <div class="sourcebox"><div class="sourcehead">先看完整方法 · query_orders()</div><pre><code data-snippet="query_orders"></code></pre><div class="sourcebar">仓库 python-agent/tools.py 的源码快照，保留原注释；向下看逐段解释。</div></div>
+        <div class="explain"><p class="lead">读完源码后，应能说出两条路径：<code>MOCK_JAVA=1</code> 时用本地数据；否则用 <code>httpx.get</code> 请求 Java。</p>
+          <ol><li><code>status</code> 和 <code>limit</code> 是模型可填参数；<code>runtime</code> 由框架注入。<code>uid</code> 从 <code>runtime.context.user_id</code> 得到。</li><li>Mock 分支：先按身份、再按状态、最后截取前 <code>limit</code> 条。<code>rows[:limit]</code> 是 Python 切片。</li><li>真实分支：组装 <code>params</code>；<code>status is None</code> 时不发 status；<code>httpx.get(..., params=..., **_JAVA_HTTP_OPTIONS)</code> 才是发往 Java 的 HTTP 请求。这里的 <code>trust_env=False</code> 让内部 Java 请求不走开发机系统代理，但不影响 DeepSeek 客户端。</li><li><code>raise_for_status()</code> 处理 HTTP 4xx/5xx；<code>body.get("code")</code> 处理 Java 业务码。两者不同。</li><li><code>body.get("data") or []</code> 把 null/空值变为空列表；再把 Java 的 <code>orderTime</code> 映射成内部的 <code>order_time</code>，复用格式化函数。</li><li>网络或解析异常由本工具捕获，返回字符串给模型，不会自动变成外层 <code>chat()</code> 的兜底。</li></ol>
+          <div class="callout"><strong>Java 类比：</strong><code>[o for o in rows if ...]</code> 约等于 <code>stream().filter(...).toList()</code>；<code>"\n".join(...)</code> 约等于逐行格式化后用换行符连接。</div>
+          <div class="callout warn"><strong>面试边界：</strong>这个方法的 <code>limit</code> 没有在 Python 侧校验；Java 服务有兜底夹逼。不要把“模型不能修改 userId”扩大成“接口无论什么情况都绝对安全”：内部令牌泄露或 Java 身份链路有缺陷时仍有风险。</div>
+        </div><div class="quiz" data-quiz="orders"><h4>闭卷作业 · 订单列表</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="detail">
+      <div class="panel"><span class="tag">工具 2 / 查单张订单</span><h3>query_order_detail()：订单号可以由模型给，归属必须由 Java 判断</h3>
+        <div class="sourcebox"><div class="sourcehead">先看完整方法 · query_order_detail()</div><pre><code data-snippet="query_order_detail"></code></pre><div class="sourcebar">仓库 python-agent/tools.py 的源码快照；向下看归属校验与失败分支。</div></div>
+        <div class="explain"><p class="lead">模型可从用户的话里提取订单号；真正允许查看与否，要靠 Java 用用户身份和订单归属判断。</p>
+          <ol><li><code>order_number</code> 是模型参数；<code>uid</code> 仍来自 <code>runtime.context.user_id</code>。</li><li>Mock 分支先按订单号找订单，然后比较订单的 <code>user_id</code> 与 <code>uid</code>；取明细时 <code>dict.get(key, [])</code> 提供空列表默认值。</li><li>真实分支请求 <code>GET /internal/orders/{orderNumber}?userId=...</code>。Java 内部服务查询归属，返回 404 或 403。</li><li>Python 分别将 404/403 转成提示语；其他 HTTP 错误经 <code>raise_for_status()</code> 进入 <code>except</code>。</li><li>成功时从 <code>data["order"]</code> 与 <code>data["details"]</code> 取订单和明细，再格式化。</li></ol>
+          <div class="callout warn"><strong>源码审计题：</strong>当前实现对 404 与 403 返回不同文案，因此“完全不泄露订单是否存在”不成立。是否要统一话术属于产品与安全取舍；先如实描述现状。</div>
+        </div><div class="quiz" data-quiz="detail"><h4>闭卷作业 · 订单归属</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="ticket">
+      <div class="panel"><span class="tag orange">工具 3 / 写操作</span><h3>create_ticket()：模型提出诉求，Java 创建工单</h3>
+        <div class="sourcebox"><div class="sourcehead">先看完整方法 · create_ticket()</div><pre><code data-snippet="create_ticket"></code></pre><div class="sourcebar">仓库 python-agent/tools.py 的源码快照；向下看成功与超时边界。</div></div>
+        <div class="explain"><p class="lead">这是四个工具中会让 Java 写入业务数据库的工具。成功消息必须建立在 Java 成功返回的工单号上。</p>
+          <ol><li>模型只填类别、诉求内容和可选订单号。<code>user_id</code> 与 <code>request_id</code> 都由运行时注入，模型不能填。</li><li>发给 Java 的 JSON 有 <code>userId/category/content/orderNumber/requestId</code>。同一用户一次发送动作复用同一个 requestId。</li><li>Mock 只造演示工单号，不落库；不能把 Mock 结果当数据库幂等证据。</li><li>真实分支 <code>httpx.post(..., json=payload)</code>；Java 依赖 <code>UNIQUE(user_id, request_id)</code>，重复且内容一致时取回原工单号，内容不同则拒绝。</li><li>只有 HTTP 和业务码都成功，才读取 <code>ticketNo</code> 并宣称已创建。</li><li>超时后结果<strong>未知</strong>，不能说已创建，也不能断言失败；同一发送动作重试要复用原 requestId。</li></ol>
+          <div class="callout warn"><strong>幂等边界：</strong>历史演示 MySQL 验证了同一 requestId 只留一条工单。2026-10-17 补上跨层恢复：网页/小程序依据 outcome 保留未知请求；重试先查原工单，找到后不再调用模型。查不到才沿用原 ID 重发；如果首请求仍在进行，重试仍可能遇到内容冲突，这时继续保留 ID 核对。不同 ID 仍可能创建另一张工单。</div>
+          <h4>2026-10-17 · 超时之后，怎样找回结果？</h4>
+          <p>旧问题发生在工具之外：Java 把 Python 故障包装成 HTTP 200 + code=1 的普通回复，网页就删掉原请求 ID。数据库唯一约束还在，但用户下一次发送会换一个 ID。修复必须让“结果是否确定”跨越每一层。</p>
+          <div class="tablewrap"><table><thead><tr><th>情形</th><th>程序依据</th><th>页面动作</th></tr></thead><tbody><tr><td>模型正常完成，且写操作无未知结果</td><td>outcome=completed</td><td>结束本次待重试状态；不等于退款成功</td></tr><tr><td>工具写超时、模型异常、Java 降级或旧响应缺少状态</td><td>outcome=unknown，或状态字段缺失</td><td>保留原消息、sessionId、requestId</td></tr><tr><td>点击重试，Java 查到当前用户该 ID 的工单</td><td>GET /user/service/ticket-result</td><td>返回真实原工单号，不再跑模型</td></tr><tr><td>查询暂未发现记录</td><td>原请求可能仍在处理中</td><td>保持原 ID 重发；查询故障则不重发</td></tr></tbody></table></div>
+          <p><code>UserContext</code> 新增的 <code>write_result_unknown</code> 和 <code>ticket_no</code> 属于本次请求。工具把执行事实写进去，HTTP 层读取；它们不由模型填写，也不是 checkpointer 中的长期聊天记录。<code>run()</code> 仍返回 reply、tool_calls 两项，新增可选 context 参数用于共享本次结果。</p>
+          <div class="sourcebox"><div class="sourcehead">完整源码 · ChatResp 与 main.chat()</div><pre><code id="chat-handler-code"></code></pre><div class="sourcebar">工单号已确认但模型随后失败时，也能依据工具事实返回登记结果；未知写入时覆盖模型的错误成功话术。</div></div>
+          <details><summary>展开完整方法：浏览器发送/重试 run()</summary><div class="sourcebox"><pre><code id="web-retry-code"></code></pre></div></details>
+          <details><summary>展开完整方法：Java 查询原工单 ticketResult()</summary><div class="sourcebox"><pre><code id="ticket-lookup-code"></code></pre></div></details>
+          <h4>验收证据与面试讲法</h4><p>Java 44 项、Python eval 29 项无网络回归通过；其中 Python 有真实 LangChain 调度 + 本地假模型的工具超时测试。网页和小程序脚本验证了未知状态保留 ID、查到工单不再 POST、查不到沿用 ID、查询失败不重发。这些都未调用付费模型、未写真实数据库。</p>
+          <p>你可以这样理解：“唯一索引解决相同 ID 不重复插入，结果查询解决已落库后如何找回工单号，outcome 解决页面是否应该保留这个 ID。三部分必须接起来。”本轮未注入真实 MySQL 丢包，也未重建 Docker 镜像；旧 FAQ 烟雾脚本的 30/13 条断言问题仍未修。</p>
+          <p>复现：在仓库根运行 <code>node frontend/test_chat_retry.js</code>；在 python-agent 目录运行 <code>python -m unittest discover -s eval -p 'test_*.py' -v</code>；Java 用 <code>mvn -o -q -pl sky-server -am test</code>。先试着用自己的话解释下面新增的 T5～T7，再看参考要点。</p>
+          <h4>同日第二轮 · 谁能决定工单关联哪张订单？</h4>
+          <p>举例：当前登录用户是 1，用户或模型给出订单 X，而 X 属于用户 2。<code>userId</code> 没被篡改，并不能证明订单号合法。修复前，写工单直接保存 X；现在 Java 在新建前查询 X，确认 <code>order.userId</code> 与可信用户相同，否则拒绝且不调用 insert。</p>
+          <ol><li>先检查用户 ID 合法，将订单号首尾空格去掉；null、空串和全空格统一为不关联订单。通用反馈可以没有订单号。</li><li>按 <code>userId + requestId</code> 查询已提交工单。相同类别、内容和规范化订单号才返回原号；同 ID 改载荷仍冲突。取回原结果不依赖当前订单是否还存在。</li><li>新请求若填写了订单号，必须查到本人订单。不存在、无归属或属于他人时统一说“未找到可关联的订单，请核对订单号。”，不能静默去掉订单号后继续建单。</li><li>校验通过后才 insert。前置查询无法排除两个并发请求都查不到的情况，所以数据库唯一约束仍保留，冲突后再查回同一个结果。</li></ol>
+          <details><summary>展开完整源码：Java createTicket()、规范化与重试载荷校验</summary><div class="sourcebox"><pre><code id="ticket-create-code"></code></pre><div class="sourcebar">由生成脚本从当前 InternalApiServiceImpl.java 提取，不是省略版示例。</div></div></details>
+          <div class="callout"><strong>语法注释：</strong><code>order == null || !Objects.equals(order.getUserId(), userId)</code> 中，<code>||</code> 会短路：查不到订单时不会执行右边，避免访问 null；<code>Objects.equals</code> 按值比较并安全处理空值。<code>TicketBusinessException</code> 表示这次业务校验已拒绝，经全局处理器返回 code=0；它与“同 ID 改载荷”的未知原结果不同。</div>
+          <p><strong>本轮证据：</strong>Java 54 项通过（上一轮 44 项）；Python eval 仍为 29 项且通过。新增 Service 测试检查本人/他人/不存在/无归属、空订单号、规范化、旧工单恢复和并发唯一键冲突；真实 Java Controller/Service + Mock Mapper 的 MVC 测试检查成功及统一拒绝响应。Python 工具契约确认拒绝时不保存工单号，也不把明确拒绝误标为未知。</p>
+          <p><strong>边界：</strong>以上不是真实 JWT、MySQL 或模型的端到端测试；未修复历史库中可能已有的不合法关联，也未覆盖校验和写入之间的并发删单。旧 FAQ 条数断言、Agent 首次并发初始化仍列后续。请做下面的 T8～T10，重点解释“身份可信”为什么还需要“资源归属校验”。</p>
+        </div><div class="quiz" data-quiz="ticket"><h4>闭卷作业 · 工单</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="faq">
+      <div class="panel"><span class="tag">工具 4 / 公共知识</span><h3>query_faq()：问规则时检索，问个人订单时查业务数据</h3>
+        <div class="sourcebox"><div class="sourcehead">先看完整方法 · query_faq()</div><pre><code data-snippet="query_faq"></code></pre><div class="sourcebar">仓库 python-agent/tools.py 的源码快照；向下看检索、空结果与异常分支。</div></div>
+        <div class="explain"><p class="lead">FAQ 是所有用户共享的规则知识，因此这个工具只有模型填写的 <code>question</code>，不需要 <code>ToolRuntime</code>。</p>
+          <ol><li><code>faq_rag.search(question)</code> 通过本地 RAG 模块检索 FAQ，默认 <code>top_k</code> 来自配置；底层由 Chroma 与嵌入模型完成召回。</li><li>检索失败时返回降级文案；没有命中时返回“暂无相关条目”。</li><li>有命中时用 <code>enumerate(hits, 1)</code> 从 1 编号，取每条命中的 question/answer，拼成工具输出交还模型。</li><li>工具输出只是检索候选，不自动证明答案正确；还需考虑 FAQ 内容质量、过期、冲突和模型最终改写数字的问题。</li></ol>
+          <div class="callout warn"><strong>已复现的知识风险：</strong>旧 30 条演示 FAQ 写了 Apple Pay、会员积分等未经后端证实的能力；现默认改用 13 条保守问答和独立 <code>faq_grounded_v3</code> 索引。检索失败/无命中不再提示模型猜数字；订单工具没有配送费/优惠券字段，“有微信支付对接代码”也不等于“当前一定能支付”。详见 FAQ 对账与复现文档；真实运营政策仍需负责人确认。</div>
+        </div><div class="quiz" data-quiz="faq"><h4>闭卷作业 · FAQ</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="review">
+      <div class="panel"><span class="tag orange">综合关卡</span><h3>把四个工具连成一段能面试讲清的项目经历</h3>
+        <div class="explain"><p class="lead">这章不要求你背一堆名词。用你项目里真实的调用、真实的失败场景和已知局限回答。</p>
+          <div class="grid"><div class="mini"><strong>事实</strong><br>源码、测试、运行记录能直接支持的说法。</div><div class="mini"><strong>推测</strong><br>由代码推断但缺少实际运行证据，需要写明假设。</div><div class="mini"><strong>改进建议</strong><br>尚未实现的方案，面试时不能当成已完成成果。</div></div>
+          <h4>语法速查</h4><div class="tablewrap"><table><thead><tr><th>Python 写法</th><th>含义</th><th>Java 近似理解</th></tr></thead><tbody><tr><td><code>int | None = None</code></td><td>可选整数；省略时默认 None</td><td>可空 Integer 参数</td></tr><tr><td><code>runtime.context.user_id</code></td><td>访问注入对象的嵌套属性</td><td>runtime.getContext().getUserId()</td></tr><tr><td><code>rows[:limit]</code></td><td>取前 limit 个元素</td><td>subList(0, limit)，但边界处理不同</td></tr><tr><td><code>[o for o in rows if 条件]</code></td><td>过滤后构造新列表</td><td>stream().filter(...).toList()</td></tr><tr><td><code>body.get("data") or []</code></td><td>空值时使用空列表</td><td>data != null ? data : emptyList()，语义近似</td></tr><tr><td><code>"\n".join(...)</code></td><td>按换行连接文本</td><td>String.join("\n", ...)</td></tr><tr><td><code>except Exception as e</code></td><td>捕获异常并绑定为 e</td><td>catch (Exception e)</td></tr><tr><td><code>type(e).__name__</code></td><td>异常类名</td><td>e.getClass().getSimpleName()</td></tr></tbody></table></div>
+          <h4>已复现并修复：多轮工具名单混入历史</h4><p>修复前：第一轮查订单返回 <code>[query_orders]</code>；第二轮只查明细，却返回 <code>[query_orders, query_order_detail]</code>。原因是 checkpointer 给出含历史的消息列表，而旧代码遍历了全部 <code>ToolMessage</code>。修复后从最后一条 <code>HumanMessage</code> 后开始统计，本轮只返回 <code>[query_order_detail]</code>。这改的是<strong>API 工具轨迹</strong>，不能据旧列表断言数据库重复查询。</p>
+          <div class="sourcebox"><div class="sourcehead">现行完整方法 · agent.run()</div><pre><code id="agent-run-code"></code></pre><div class="sourcebar">生成时直接取自 python-agent/agent.py；用它解释“历史记忆”和“本轮观测”为什么不是一回事。</div></div>
+          <div class="callout warn"><strong>真实链路的另外两层：</strong>本机系统代理曾让 Python→Java 内部请求收到 502，现只对内部请求设 <code>trust_env=False</code>；演示数据中的中文乱码已在 MySQL 字段内，不能怪模型猜错。源码种子现用 <code>SET NAMES utf8mb4</code> 防止新卷重现，本机旧卷的 6 个演示名称已限定修复并复测，但其他中文字段未全量审计。</div>
+          <p><strong>当前验收到哪：</strong>重建当前 Java/Python Docker 镜像后，已从 Java 用户入口 <code>8080/user/service/chat-python</code> 用同一会话完成两轮只读验收：先查订单，再查刚才那单明细；第二轮只记录 <code>query_order_detail</code>，中文菜名正常。旧 Java 镜像曾返回 Python 401；容器环境令牌相同、手工携令牌请求得到 422，只能确定旧应用发出的令牌与环境不一致，不能臆断它读取了哪个配置。此处未验真实 JWT、写工单、故障注入。</p>
+        </div><div class="quiz" data-quiz="review"><h4>闭卷作业 · 项目讲解与改进</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="lab">
+      <div class="panel"><span class="tag orange">真实能力验收</span><h3>从“看懂”到“自己能改”</h3>
+        <div class="explain"><p class="lead">先闭卷讲解，再在项目源码里完成一处小改动，最后拿测试和差异证明它确实工作。</p>
+          <div class="grid"><div class="mini"><strong>L1 · 识别</strong><br>看源码能指出参数来源、分支和结果。</div><div class="mini"><strong>L2 · 闭卷讲解</strong><br>不看源码，完整说明调用链及失败分支，能回答追问。</div><div class="mini"><strong>L3 · 独立修改</strong><br>实际改项目文件，交代码差异、运行命令、测试输出。</div><div class="mini"><strong>L4 · 迁移应用</strong><br>换一个未练过的场景，能自行定位、设计验证并解释取舍。</div></div>
+          <h4>第一关：闭卷口述</h4><p>任选 <code>query_orders</code> 和 <code>create_ticket</code>，关掉讲解和源码，用自己的话各讲一遍：用户输入 → 模型参数 → 运行时身份 → Python 分支 → Java/Mock → 错误处理 → 回复。建议录音或写口述稿；不会的地方直接标记。</p>
+          <h4>第二关：真实修改任务</h4><p>请你自己修改 <code>python-agent/tools.py</code>：让 <code>query_orders</code> 对无效 <code>limit</code>（小于等于 0 或大于 20）统一按 5 条处理；Mock 和真实 HTTP 分支都应使用处理后的值。先读 Java 端现有逻辑再决定边界；把 0、21、5 三种情况加入测试或写出可重复执行的验证命令。</p>
+          <div class="callout warn"><strong>注意：</strong>本学习包没有替你改业务代码。提交时附真实代码 diff、命令、输出；不要在答案里写“已通过”但没有运行。Java 端仍需保留自己的入参校验。</div>
+          <h4>第三关：变化场景与 Bad Case</h4><p>假设模型给出 <code>limit=-3</code>，当前 Mock 的 <code>rows[:limit]</code> 会产生什么？修改后应该是什么？连续创建两次相同工单又会怎样？把观察到的失败和复现条件写进作业；只有真正复现的现象才进“已确认 Bad Case”。</p>
+          <h4>交付给我批改时</h4><ol><li>导出本页 Markdown 作业和 JSON 备份。</li><li>附闭卷口述稿或录音转写，以及实际 diff。</li><li>附测试命令、原始输出、未通过项；不要只写“测试通过”。</li><li>我按 L1～L4 逐项批改，再将证据和下一次复测点记入练习记录与 AI 记忆。</li></ol>
+        </div><div class="quiz" data-quiz="lab"><h4>独立验收 · 留证据</h4></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="source">
+      <div class="panel"><span class="tag">附录</span><h3>tools.py 完整源码快照</h3><p>此处嵌入生成学习包时的源码，可离线核对。未来如果修改 <code>tools.py</code>，重新生成学习包后再使用。</p><div class="sourcebox"><pre><code id="all-code"></code></pre></div></div>
+    </section>
+    <p class="endnote">资料只供本项目学习。页面不连接网络，不调用后端，不会把答案自动发给任何服务。请用“导出 Markdown 作业”提交批改，用“导出 JSON 备份”保留可恢复的答题内容。</p>
+  </main>
+</div>
+<pre id="full-source">__TOOLS_SOURCE_HTML_ESCAPED__</pre>
+<pre id="agent-run-source">__AGENT_RUN_HTML_ESCAPED__</pre>
+<pre id="chat-handler-source" hidden>__CHAT_HANDLER_HTML_ESCAPED__</pre>
+<pre id="ticket-lookup-source" hidden>__TICKET_LOOKUP_HTML_ESCAPED__</pre>
+<pre id="ticket-create-source" hidden>__TICKET_CREATE_HTML_ESCAPED__</pre>
+<pre id="web-retry-source" hidden>__WEB_RETRY_HTML_ESCAPED__</pre>
+<script>
+(() => {
+  'use strict';
+  const version = '__SOURCE_SHA__';
+  const agentVersion = '__AGENT_RUN_SHA__';
+  const key = 'sky-agent-tools-workbook-v1';
+  const source = document.getElementById('full-source').textContent.replace(/\r\n/g, '\n');
+  const agentRunSource = document.getElementById('agent-run-source').textContent.replace(/\r\n/g, '\n');
+  document.getElementById('source-stamp').textContent = '源码快照：tools ' + version + ' · run ' + agentVersion;
+  document.getElementById('all-code').textContent = source;
+  document.getElementById('agent-run-code').textContent = agentRunSource;
+  for (const name of ['chat-handler','ticket-lookup','ticket-create','web-retry']) {
+    document.getElementById(name+'-code').textContent = document.getElementById(name+'-source').textContent;
+  }
+  const questions = [
+    {id:'o1',section:'orders',kind:'闭卷复述',q:'不看源码，按执行顺序讲清 query_orders() 的真实 Java 分支：参数从哪里来？怎样发 HTTP？怎样处理返回？',rubric:'至少包含模型填 status/limit；runtime 提供 uid；params + X-Internal-Token；raise_for_status；业务 code；data 映射与格式化；except。'},
+    {id:'o2',section:'orders',kind:'接续题',q:'Java 返回 HTTP 200、code=1、data=null。body.get("data") or [] 得到什么？为什么列表推导式不会因 None 报错？最终工具返回什么？',rubric:'None or [] 结果为空列表；遍历空列表得 rows=[]；返回“你当前没有符合条件的订单。”'},
+    {id:'o3',section:'orders',kind:'变化场景',q:'当前 uid=1；模型填 status=2、没填 limit。写出最终 URL 查询参数。若 Java 返回 HTTP 500，会执行 if body.get("code") 吗？工具返回哪类信息？',rubric:'userId=1、limit=5、status=2；内部请求 trust_env=False 绕过系统代理；raise_for_status 抛错，直接进入 except，不执行 body 判断；返回订单服务暂时不可用及异常类型。'},
+    {id:'o4',section:'orders',kind:'边界与证据',q:'用户说“查用户2的订单”，为什么模型不能直接把 uid 改成2？这个结论还依赖 Java 侧的什么条件？',rubric:'模型仅填公开工具参数；uid 来自注入的 UserContext；还依赖 Java 正确解析用户登录身份、内部 token 保护、后端再次约束访问。'},
+    {id:'d1',section:'detail',kind:'闭卷复述',q:'不看源码，讲清 query_order_detail() 从用户给出订单号到返回明细的完整过程，分别说明 Mock 和真实 Java 分支。',rubric:'订单号由模型填；uid 注入；Mock 找单并比归属；真实 Java GET、403/404 分支、业务码、order/details 格式化、异常兜底。'},
+    {id:'d2',section:'detail',kind:'变化场景',q:'用户1查一个实际属于用户2的订单。Java 已查到订单并返回 HTTP 403。Python 会返回什么？raise_for_status() 会执行吗？',rubric:'命中 403 提前 return 无权查看提示；不执行后面的 raise_for_status。'},
+    {id:'d3',section:'detail',kind:'审计题',q:'项目文档说“不会泄露订单是否存在”。对照当前 403/404 返回文案，你是否同意？说明证据，并给出一种更稳妥的对外话术。',rubric:'不同文案可区分存在但不属于本人/不存在，原说法不成立；可统一成“未找到可查看的订单”，同时内部日志保留真实状态。'},
+    {id:'t1',section:'ticket',kind:'闭卷复述',q:'不看源码，讲清 create_ticket() 如何构造 payload、调用 Java、确认成功并生成最终回复。',rubric:'模型填 category/content/order_number；uid 注入；payload 驼峰 key；POST json；HTTP/业务码双检查；读 ticketNo；异常不宣称成功。'},
+    {id:'t2',section:'ticket',kind:'事实边界',q:'MOCK_JAVA=1 时工具返回“已创建工单”。这能证明 MySQL 已经落库吗？面试时应如何准确描述？',rubric:'不能；Mock 仅本地造号，不落库。面试应区分模拟测试与真实联调。'},
+    {id:'t3',section:'ticket',kind:'变化场景',q:'Java 已插入工单，但响应在网络中丢失，Python 超时。用户看到什么？模型同一次发送动作又调用 create_ticket 会怎样？',rubric:'结果未知，不宣称成功/失败；同一 userId+requestId 且内容一致返回原 ticketNo；改内容则冲突；不同 requestId 仍可能建第二张。'},
+    {id:'t4',section:'ticket',kind:'代码审查',q:'沿 Java→Python→Tool→Java→MySQL 找 requestId 的来源与唯一约束。为什么客户端重试时必须复用它？',rubric:'ServiceChatDTO 可接收客户端稳定 ID；缺省 Java 新建 UUID；Python 经 UserContext 注入；工具带给 Java；数据库 UNIQUE(user_id,request_id)。未传 ID 的跨请求重试仍不幂等。'},
+    {id:'t5',section:'ticket',kind:'超时恢复闭卷题',q:'Java 已写库，Python 超时，Java 却返回 HTTP 200。修复前页面为什么会丢掉保护？现在从工具到网页，每层如何传递并处理未知结果？',rubric:'旧页面把 HTTP 200/code=1 当处理完成，清 pending；工具记录本次 write_result_unknown，main 返回 outcome=unknown，Java 透传并把自身降级标为 unknown，网页/小程序保留原 ID。模型说成功不能覆盖工具事实。'},
+    {id:'t6',section:'ticket',kind:'幂等与结果恢复',q:'为什么重试前要先调用 GET /user/service/ticket-result，而不是直接再让 Agent 执行一次？查不到工单是否能断定原请求失败？',rubric:'模型可能改写原内容，导致同 ID 不同载荷冲突；Java 按可信 userId+原 ID 查到则直接返回工单号，不再跑模型。查不到可能尚在进行，不能断言失败；只沿用原 ID 重发，查询故障时保留 ID 不重发。'},
+    {id:'t7',section:'ticket',kind:'证据边界',q:'outcome=completed、code=1、工单已完结分别说明什么？29 项 Python 测试和 44 项 Java 测试是否证明真实超时与退款成功？你还需要补什么验证？',rubric:'completed 表示本轮不再有未知写结果；code=1 只表示接口正常承载结果；工单完结只是状态。当前无网络回归未证明真实丢包、部署、退款；需隔离环境重建当前版本，受控注入写后响应丢失，核对同 ID 恢复同一工单及数据库唯一行。'},
+    {id:'t8',section:'ticket',kind:'身份与资源边界',q:'当前 userId=1 是运行时注入的可信值，模型传入的订单却属于用户2。为什么仍必须在 Java 拒绝建单？如果改 system_prompt 让模型先查单，能代替这个校验吗？',rubric:'身份可信只证明是谁，不能证明其选中的资源属于自己；订单号由模型决定，写入口需独立检查，不能依赖模型的查询顺序或提示词。拒绝且不 insert，不能静默取消关联。'},
+    {id:'t9',section:'ticket',kind:'重试顺序取舍',q:'相同 requestId 的工单昨天已经创建，今天订单已查不到。为什么先取回原工单，而不是先查当前订单再决定是否报错？如果相同 ID 改了订单号又怎样？',rubric:'这是取回已提交结果，不是再次创建；按 userId+requestId 查原工单，载荷一致才返回原号，不依赖当前订单状态；改订单号属于不同载荷，仍冲突且不新增。'},
+    {id:'t10',section:'ticket',kind:'短路与并发',q:'解释 order == null || !Objects.equals(order.getUserId(), userId) 的执行顺序。另有两个请求同时查不到原工单，都通过归属校验，为什么仍不能删掉唯一索引？',rubric:'左侧为 true 时不执行右侧，避免对 null 调方法；Objects.equals 做空值安全的值比较。查后写存在并发窗口，唯一索引是最终去重保障，DuplicateKeyException 后回查并核对载荷；单元测试不是数据库并发实测。'},
+    {id:'f1',section:'faq',kind:'闭卷复述',q:'不看源码，讲清 query_faq() 为什么不需要 runtime，以及检索成功、无结果、异常三种路径。',rubric:'公共 FAQ 不依赖用户身份；search 返回 hits；有结果格式化 Q/A；无结果提示；异常返回降级文案。'},
+    {id:'f2',section:'faq',kind:'工具选择',q:'用户说“退款多久到账”和“我的订单退款到哪了”时，应该分别用哪些工具？为什么？',rubric:'通用退款规则走 query_faq；个人订单状态走 query_orders 或 query_order_detail；可能组合调用，不能用 FAQ 假装知道私人订单。'},
+    {id:'f3',section:'faq',kind:'审计题',q:'旧题库写“支持 Apple Pay”，而当前后端只找到微信支付实现。为什么检索命中不等于事实？现在如何避免继续召回旧内容？',rubric:'旧内容未经业务核实；新默认题库只说可证实/未知，使用独立 faq_grounded_v3 collection；代码里有微信支付对接也不等于实际渠道已可用，仍需核对真实政策。'},
+    {id:'i1',section:'interview',kind:'90 秒项目介绍',q:'用自己的话讲：这个售后 Agent 为什么由 Python + Java 协作？模型、运行时身份、Java、MySQL 分别负责什么？最后主动说一个尚未验证的边界。',rubric:'模型选择工具与组织回复；Java 提供身份解析、业务校验和数据库事实源；Python 运行工具与记忆；新增小程序页当前只用演示身份，不能把演示两轮验收说成生产 JWT 或真实微信登录验收。'},
+    {id:'i2',section:'interview',kind:'评测追问',q:'面试官问“你们准确率多少？”结合 36 例/40 轮、19 pass/21 needs_review/0 fail，以及人工发现的 Bad Case，给出不夸大的回答。',rubric:'区分固定干净提交与当前未提交样本；自动判分与人工复核不是同一指标；21 needs_review 不计通过；0 自动 fail 仍发现 BC-003/004，不能报 100% 准确率。'},
+    {id:'i3',section:'interview',kind:'失败归因',q:'从历史 toolCalls、代理 502、数据库中文乱码里选一个：按“现象→定位证据→修复→复测→仍未覆盖”完整讲一遍。',rubric:'必须选择真实案例并给出区分层次的证据；不要把观测错误说成重复查库，也不要把数据库旧卷污染说成模型翻译错误。'},
+    {id:'i4',section:'interview',kind:'幂等设计',q:'Java 建单成功但响应丢失，Python 超时。为何此时不能说“失败后重试即可”？当前 requestId 方案验证到了什么、还有什么缺口？',rubric:'超时结果未知；同一发送动作 ID 稳定且内容一致才能复用原单；唯一约束是最终去重；真实顺序重复 POST 已验，未验丢包/并发/客户端换 ID。'},
+    {id:'i5',section:'interview',kind:'RAG 事实边界',q:'检索到了“支持微信支付”或模型说“我能帮你核对优惠券”，你分别如何判断能否对用户承诺？用项目中的 Bad Case 说明。',rubric:'向量命中不是业务授权；支付代码不等于渠道可用；订单工具没有配送费/优惠券字段；FAQ-02/04/05 的人工发现与定点回归只是局部证据。'},
+    {id:'i6',section:'interview',kind:'反问与成长',q:'假设面试官说“这些都是 AI 帮你改的，凭什么说你会？”请选一处改动，说明你能独立复现的命令/观察、代码路径、设计取舍；再写出你目前仍不会的部分。',rubric:'给出一条可复现证据和一处明确边界；若还不能独立解释，应如实写学习中，回相应工具章节补足，不背现成话术。'},
+    {id:'r1',section:'review',kind:'面试口述',q:'用 90～150 字介绍本项目 Agent 工具层：模型、LangChain、Python 工具、Java 和 MySQL 各负责什么？',rubric:'区分模型决策参数、框架调度与 runtime 注入、Python HTTP 适配、Java 业务/归属校验/数据库事实源；不声称模型直接查库。'},
+    {id:'r2',section:'review',kind:'历史源码辨错',q:'agent.py 的 run() 注释称 tool_calls 是“本轮实际调用过的工具”。结合 checkpointer 与列表推导式，说明为什么这个说法在多轮场景可能不准确。',rubric:'这是修复前的历史题：result["messages"] 可能包含历史消息；旧版遍历全部 ToolMessage，未按本轮消息起点截取，所以混入之前轮次工具。'},
+    {id:'r3',section:'review',kind:'综合场景',q:'用户要求“帮我看订单号 X 的配送状态，若异常就转人工”。你预计 Agent 最多可能调用哪两个工具？哪些事实必须由 Java 返回？',rubric:'query_order_detail 查当前用户订单；若需人工且用户意图符合，create_ticket 登记；订单状态/归属与 ticketNo 必须来自 Java；不能承诺未完成操作。'},
+    {id:'r4',section:'review',kind:'独立修改',q:'不用真的改项目：写出伪代码或步骤，让 query_orders() 在 Python 侧把 limit 限制在 1～20；指出 Java 侧为何仍需校验。',rubric:'如 limit=min(max(limit,1),20)，但需考虑异常类型/模型填错；Java 仍独立校验以保护自身接口，不能只信 Python。'},
+    {id:'r5',section:'review',kind:'自我评估',q:'现在你能独立讲清哪一个工具？哪一段仍需看代码？写一个你想让 AI 追问的薄弱点。',rubric:'如实填写；这题用于决定下一次从哪里复习，不计正确率。'},
+    {id:'r6',section:'review',kind:'真实故障归因',q:'本机问订单时 Agent 回“服务暂不可用”；只读预检 Java 为 200，默认 httpx 为 502，trust_env=False 为 200。你如何排除 MySQL、令牌和模型决策故障？为什么只让 Java 内部请求绕过代理？',rubric:'模型已选 query_orders；相同 URL/参数/令牌直连成功，默认请求失败，差异指向系统代理；只改内部服务 HTTP 客户端，不改变 DeepSeek 对外网络策略。'},
+    {id:'r7',section:'review',kind:'编码追因',q:'种子 SQL 是 UTF-8，表为 utf8mb4，为什么已存菜名仍可能乱码？SET NAMES utf8mb4 修的是哪个阶段？为什么改种子文件不会自动修复已有数据卷？',rubric:'mysql CLI 会话 character_set_client 可能是 latin1；UTF-8 字节被错读后再写入 utf8mb4；SET NAMES 在导入前声明输入编码；Docker 初始化脚本只在新空卷执行，旧数据需受控修复。'},
+    {id:'r8',section:'review',kind:'修复复盘',q:'看现行 agent.run() 完整方法：它怎样限定“本轮工具”？这次修复改变的是 API 展示轨迹，还是实际数据库查询次数？',rubric:'找到最后一条 human 消息的位置，仅统计其后的 ToolMessage；修复 API 观测，不能因此断言旧版真的重复查库。'},
+    {id:'r9',section:'review',kind:'部署归因',q:'旧 Java 镜像转发到 Python 得 401；两容器环境令牌相同，手工从 Java 容器带令牌请求 Python 得 422；当前源码镜像重建后两轮成功。你能确定什么，不能确定什么？',rubric:'能确定网络可达、Python 接受环境令牌、旧应用实际请求未通过认证、当前镜像可用；不能仅据这些证据断言旧 JAR 究竟读了哪个配置或把 422 当成功业务响应。'},
+    {id:'r10',section:'review',kind:'面试复现',q:'如何用一条脚本复现真实查单→追问明细？再说明该脚本不能证明的三个结论。',rubric:'运行 eval/real_chat_smoke.py 并指定演示订单号/菜名；只验两轮读样本，不验生产 JWT、写工单、并发/故障或任意问法。'},
+    {id:'l1',section:'lab',kind:'L2 闭卷口述',q:'不看源码，独立讲清 query_orders 的一条完整成功路径和一条失败路径。写口述稿，不要贴源码。',rubric:'成功路径包含参数、身份、HTTP、Java 业务码、格式化；失败路径区分 HTTP/业务失败；由 AI 追问，不凭自评判 L2。'},
+    {id:'l2',section:'lab',kind:'L2 闭卷口述',q:'不看源码，独立讲清 create_ticket 的调用链。特别说明“超时但 Java 已写库”时你知道什么、不知道什么。',rubric:'区分模型参数与可信身份、POST/业务码、ticketNo；超时结果未知，不能宣称成功或失败，也不能忽略幂等直接重试。'},
+    {id:'l3',section:'lab',kind:'L3 代码证据',q:'贴出你对 query_orders 的真实项目 diff，并说明为什么 Mock 和 HTTP 分支都使用规范化后的 limit。',rubric:'必须是实际项目改动而非伪代码；无效值回退 5，正常 1～20 保持；说明双分支一致性及 Java 仍校验。'},
+    {id:'l4',section:'lab',kind:'L3 测试证据',q:'贴出你运行的测试命令与原始输出；至少覆盖 limit=0、21、5，并说出尚未覆盖什么。',rubric:'命令和输出能对应边界；没运行就写未运行，不能自称通过。'},
+    {id:'l5',section:'lab',kind:'L4 变化场景',q:'如果 limit=-3 且 Mock 有 5 条订单，修改前后的结果有何不同？再说一个你会如何复现并记录的真实 Bad Case。',rubric:'Python [:-3] 会截掉末尾 3 条，可能错误返回前 2 条；修改后回退 5。Bad Case 需有输入、预期、实际、证据和修复/复测状态。'}
+  ];
+  let answers = {};
+  let checkpoints = {};
+  let persistAvailable = false;
+  const saveStatus = document.getElementById('save-status');
+  const fileInput = document.getElementById('file-input');
+  function setStatus(message, bad=false){saveStatus.textContent=message;saveStatus.classList.toggle('bad',bad);document.getElementById('save-side').textContent=message;}
+  try{const probe=key+'-probe';localStorage.setItem(probe,'1');localStorage.removeItem(probe);persistAvailable=true;const raw=localStorage.getItem(key);if(raw){const data=JSON.parse(raw);answers=data.answers||{};checkpoints=data.checkpoints||{};}setStatus('本机自动保存可用；仍建议导出 JSON 备份');}catch(e){setStatus('本浏览器未提供自动保存；请定期导出 JSON 备份',true);}
+  function save(){if(!persistAvailable)return;try{localStorage.setItem(key,JSON.stringify({version:1,source:version,answers,checkpoints,updatedAt:new Date().toISOString()}));setStatus('已自动保存到本机浏览器');}catch(e){persistAvailable=false;setStatus('自动保存失败；现在请导出 JSON 备份',true);}}
+  function count(){const done=questions.filter(q=>(answers[q.id]||'').trim()).length;document.getElementById('progress-text').textContent=`已填写 ${done} / ${questions.length} 题`;document.getElementById('progress-bar').style.width=(100*done/questions.length)+'%';}
+  const studySections = ['interview','orders','detail','ticket','faq','review','lab'];
+  function renderQuestions(){for(const section of studySections){const box=document.querySelector(`[data-quiz="${section}"]`);for(const q of questions.filter(x=>x.section===section)){const card=document.createElement('div');card.className='question';const title=document.createElement('div');title.className='qtitle';title.textContent=q.q;const meta=document.createElement('div');meta.className='qmeta';meta.textContent=q.id.toUpperCase()+' · '+q.kind;const area=document.createElement('textarea');area.id='answer-'+q.id;area.setAttribute('aria-label',q.id+' 的回答');area.placeholder='用自己的话写。不会就写“不知道”，批改时会更准确。';area.value=answers[q.id]||'';area.addEventListener('input',()=>{answers[q.id]=area.value;save();count();});const detail=document.createElement('details');const summary=document.createElement('summary');summary.textContent='答完后展开：参考要点';const guide=document.createElement('p');guide.textContent=q.rubric;detail.append(summary,guide);card.append(meta,title,area,detail);box.appendChild(card);}const checkpoint=document.createElement('div');checkpoint.className='checkpoint';const label=document.createElement('label');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!checkpoints[section];cb.addEventListener('change',()=>{checkpoints[section]=cb.checked;save();});label.append(cb,document.createTextNode(' 我已闭卷作答并准备交给 AI 批改（自勾选不等于 L2）'));checkpoint.appendChild(label);box.appendChild(checkpoint);}count();}
+  function renderSnippets(){const starts={query_orders:'@tool\ndef query_orders(',query_order_detail:'@tool\ndef query_order_detail(',create_ticket:'@tool\ndef create_ticket(',query_faq:'@tool\ndef query_faq('};const ends={query_orders:'\n# ==================== 工具 2',query_order_detail:'\n# ==================== 工具 3',create_ticket:'\n# ==================== 工具 4',query_faq:null};for(const [name,marker] of Object.entries(starts)){const start=source.indexOf(marker);const endMarker=ends[name];const end=endMarker?source.indexOf(endMarker,start):source.length;const node=document.querySelector(`[data-snippet="${name}"]`);node.textContent=start>=0&&end>=start?source.slice(start,end).trimEnd():'未找到方法，请核对源码快照';}}
+  function openChapter(id){document.querySelectorAll('.chapter').forEach(el=>el.classList.toggle('active',el.id===id));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.go===id));window.scrollTo({top:0,behavior:'instant'});}
+  document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>openChapter(btn.dataset.go)));
+  document.getElementById('focus-btn').addEventListener('click',()=>{document.body.classList.toggle('hidden-mode');document.getElementById('focus-btn').textContent=document.body.classList.contains('hidden-mode')?'退出闭卷模式':'开启闭卷模式';});
+  function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+  function md(){const out=['# Agent 工具层与面试复盘离线作业','','- 学习包：01-tools + 面试总复盘','- 源码快照：'+version,'- 导出时间：'+new Date().toLocaleString('zh-CN'),'- 说明：未回答的题保留“未作答”，请按源码与学习证据批改，不自动判 L2。',''];for(const section of studySections){out.push('## '+({interview:'面试总复盘',orders:'01 查订单列表',detail:'02 查订单明细',ticket:'03 创建工单',faq:'04 FAQ 检索',review:'05 综合复盘',lab:'06 独立验收'}[section]),'');for(const q of questions.filter(x=>x.section===section)){out.push('### '+q.id.toUpperCase()+' · '+q.kind,'',q.q,'','我的回答：','','````text',answers[q.id]||'未作答','````','');}}return out.join('\n');}
+  document.getElementById('export-md').addEventListener('click',()=>download('Agent工具层_我的作业.md',md(),'text/markdown;charset=utf-8'));
+  document.getElementById('export-json').addEventListener('click',()=>download('Agent工具层_答题备份.json',JSON.stringify({version:1,source:version,answers,checkpoints,updatedAt:new Date().toISOString()},null,2),'application/json;charset=utf-8'));
+  document.getElementById('import-json').addEventListener('click',()=>fileInput.click());
+  fileInput.addEventListener('change',async()=>{const file=fileInput.files&&fileInput.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(data.version!==1||!data.answers||typeof data.answers!=='object')throw new Error('备份格式不匹配');if(data.source!==version&&!confirm('备份的源码版本与当前学习包不同。仍要导入答案吗？'))return;if(!confirm('导入会覆盖本页当前答案。确定导入吗？'))return;answers=data.answers;checkpoints=data.checkpoints||{};for(const q of questions){document.getElementById('answer-'+q.id).value=answers[q.id]||'';}for(const section of studySections){document.querySelector(`[data-quiz="${section}"] input[type="checkbox"]`).checked=!!checkpoints[section];}save();count();setStatus(persistAvailable?'备份已导入并保存':'备份已导入；离开页面前请再导出 JSON',!persistAvailable);}catch(e){alert('导入失败：'+e.message);}finally{fileInput.value='';}});
+  renderSnippets();renderQuestions();
+  const initialChapter = window.location.hash.slice(1);
+  if (document.getElementById(initialChapter)?.classList.contains('chapter')) openChapter(initialChapter);
+})();
+</script>
+</body>
+</html>

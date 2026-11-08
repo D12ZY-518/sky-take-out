@@ -1,0 +1,18 @@
+.page{height:100vh;display:flex;flex-direction:column;background:#f5f6f1;color:#203a33}
+.hero{padding:34rpx 30rpx 28rpx;background:linear-gradient(135deg,#205f4d,#103e35);color:#fff}
+.hero-kicker{font-size:21rpx;letter-spacing:4rpx;color:#c9e6d4}
+.hero-title{font-size:39rpx;font-weight:600;margin-top:10rpx}
+.hero-subtitle{font-size:22rpx;color:#d8e9de;margin-top:12rpx;line-height:1.5}
+.notice{font-size:22rpx;line-height:1.5;color:#7b592f;background:#fff8e9;padding:19rpx 28rpx;border-bottom:1rpx solid #eee2c8}
+.examples{display:flex;flex-wrap:wrap;padding:20rpx 20rpx 7rpx;gap:10rpx}
+.examples button{margin:0;border:1rpx solid #bad2c4;background:#fff;color:#205f4d;font-size:22rpx;border-radius:32rpx}
+.messages{flex:1;height:0;padding:12rpx 24rpx;box-sizing:border-box}
+.row{display:flex;margin:19rpx 0}.row.user{justify-content:flex-end}
+.bubble{max-width:82%;padding:20rpx 24rpx;border-radius:20rpx 20rpx 20rpx 5rpx;background:#fff;font-size:28rpx;line-height:1.6;word-break:break-all;white-space:pre-wrap;box-shadow:0 4rpx 18rpx rgba(31,74,55,.05)}
+.user .bubble{background:#1b6b58;color:#fff;border-radius:20rpx 20rpx 5rpx 20rpx}
+.tools{font-size:20rpx;color:#668473;margin-top:12rpx}.user .tools{color:#d5eee1}
+.composer{padding:16rpx 24rpx 30rpx;background:#fff;border-top:1rpx solid #e7eee7}
+.input{width:100%;min-height:80rpx;max-height:180rpx;background:#f7faf6;border:1rpx solid #d7e7da;border-radius:14rpx;padding:15rpx;box-sizing:border-box;font-size:28rpx}
+.buttons{display:flex;gap:10rpx;margin-top:13rpx}.buttons button{flex:1;margin:0;font-size:23rpx;padding:0 4rpx}
+.buttons button[type="primary"]{background:#1b6b58;color:#fff;border-color:#1b6b58}
+.status{font-size:21rpx;color:#6d8075;margin-top:12rpx}

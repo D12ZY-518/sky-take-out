@@ -1,0 +1,13 @@
+.help-page{min-height:100vh;box-sizing:border-box;background:#f5f6f1;color:#203a33;padding:0 28rpx 40rpx}
+.intro{margin:0 -28rpx 36rpx;padding:72rpx 36rpx 60rpx;background:linear-gradient(135deg,#205f4d,#103e35);color:#fff;border-radius:0 0 38rpx 38rpx}
+.intro-kicker{font-size:21rpx;letter-spacing:4rpx;color:#c9e6d4}
+.intro-title{font-size:43rpx;font-weight:600;margin-top:12rpx}
+.intro-subtitle{font-size:25rpx;color:#d9eade;margin-top:16rpx;line-height:1.5}
+.section-title{font-size:27rpx;font-weight:600;margin:8rpx 8rpx 20rpx}
+.help-card{background:#fff;border-radius:24rpx;overflow:hidden;box-shadow:0 10rpx 35rpx rgba(23,67,47,.06)}
+.help-row{display:flex;align-items:center;min-height:136rpx;padding:0 24rpx;border-bottom:1rpx solid #edf2eb}.help-row:last-child{border-bottom:0}
+.help-icon{width:64rpx;height:64rpx;line-height:64rpx;text-align:center;border-radius:18rpx;background:#e5f0e8;color:#205f4d;font-size:30rpx;margin-right:22rpx}
+.agent-icon{background:#d7eadd;color:#145340}.help-copy{flex:1}
+.help-label{font-size:29rpx;font-weight:500}.help-hint{font-size:23rpx;color:#789083;margin-top:6rpx}
+.arrow{font-size:42rpx;color:#92ac9b}
+.demo-note{font-size:23rpx;color:#7c6545;line-height:1.6;margin:32rpx 8rpx;padding:22rpx;background:#fff8e9;border:1rpx solid #eee2c8;border-radius:16rpx}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 点餐助手 · 禾巷餐饮</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f5f6f7; height: 100vh; display: flex; justify-content: center; align-items: center; }
+  .app { width: 860px; height: 92vh; background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.12);
+         display: flex; flex-direction: column; overflow: hidden; }
+  header { background: linear-gradient(135deg, #07c160, #06ad56); color: #fff; padding: 16px 20px;
+           display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header .demo { background: rgba(255,255,255,.2); padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+  .body { flex: 1; display: flex; overflow: hidden; }
+  .chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .msgs { flex: 1; overflow-y: auto; padding: 18px; }
+  .msg { margin-bottom: 14px; display: flex; }
+  .msg .bubble { max-width: 78%; padding: 10px 14px; border-radius: 12px; line-height: 1.6; white-space: pre-wrap;
+                 word-break: break-word; font-size: 14px; }
+  .msg.user { justify-content: flex-end; }
+  .msg.user .bubble { background: #07c160; color: #fff; border-top-right-radius: 2px; }
+  .msg.ai .bubble { background: #f1f2f3; color: #222; border-top-left-radius: 2px; }
+  .chips { padding: 0 18px 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid #07c160; color: #07c160; background: #fff; border-radius: 14px; padding: 5px 12px;
+          font-size: 12px; cursor: pointer; }
+  .chip:hover { background: #e8f8ef; }
+  .inputbar { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #eee; }
+  .inputbar input { flex: 1; border: 1px solid #ddd; border-radius: 20px; padding: 10px 16px; outline: none; font-size: 14px; }
+  .inputbar button { background: #07c160; color: #fff; border: none; border-radius: 20px; padding: 0 22px; cursor: pointer; font-size: 14px; }
+  .inputbar button:disabled { opacity: .6; }
+  aside { width: 240px; border-left: 1px solid #eee; display: flex; flex-direction: column; }
+  aside .title { padding: 14px 16px; font-weight: 600; font-size: 14px; border-bottom: 1px solid #eee; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .cart-item { padding: 10px 16px; font-size: 13px; display: flex; justify-content: space-between; }
+  .cart-item .sub { color: #07c160; font-weight: 600; }
+  .cart-empty { color: #999; font-size: 13px; padding: 16px; }
+  .cart-total { padding: 12px 16px; border-top: 1px solid #eee; display: flex; justify-content: space-between;
+                font-weight: 600; font-size: 14px; }
+  .tip { font-size: 11px; color: #aaa; text-align: center; padding: 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>AI 点餐助手 · 禾巷餐饮</h1>
+    <span class="demo">演示模式（用户 1）</span>
+  </header>
+  <div class="body">
+    <div class="chat">
+      <div class="msgs" id="msgs"></div>
+      <div class="chips" id="chips">
+        <span class="chip">推荐两个招牌菜</span>
+        <span class="chip">我要一份宫保鸡丁</span>
+        <span class="chip">来份双人套餐</span>
+        <span class="chip">看看我的购物车</span>
+      </div>
+      <div class="inputbar">
+        <input id="input" placeholder="想吃什么？直接说…" />
+        <button id="send">发送</button>
+      </div>
+      <div class="tip">演示环境无鉴权，生产接入登录态后按用户隔离</div>
+    </div>
+    <aside>
+      <div class="title">购物车</div>
+      <div class="cart-items" id="cartItems"><div class="cart-empty">点“看看我的购物车”或让 AI 加购后自动刷新</div></div>
+      <div class="cart-total"><span>合计</span><span id="cartTotal">¥0.00</span></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const msgs = document.getElementById('msgs');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send');
+const chips = document.getElementById('chips');
+const cartItems = document.getElementById('cartItems');
+const cartTotal = document.getElementById('cartTotal');
+
+function addMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = text;
+  div.appendChild(b);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return b;
+}
+
+async function chat(text) {
+  const content = text.trim();
+  if (!content) return;
+  addMsg('user', content);
+  const bubble = addMsg('ai', '思考中…');
+  try {
+    const res = await fetch('/user/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: content })
+    });
+    const json = await res.json();
+    if (json.code === 1 && json.data) {
+      bubble.textContent = json.data.reply;
+      loadCart();
+    } else {
+      bubble.textContent = json.msg || '服务开小差了，稍后再试';
+    }
+  } catch (e) {
+    bubble.textContent = '网络异常：' + e.message;
+  }
+}
+
+function yuan(v) { return '¥' + Number(v || 0).toFixed(2); }
+
+async function loadCart() {
+  try {
+    const res = await fetch('/user/ai/cart');
+    const json = await res.json();
+    cartItems.innerHTML = '';
+    if (json.code === 1 && json.data && json.data.length) {
+      let total = 0;
+      json.data.forEach(item => {
+        const sub = Number(item.amount) * Number(item.number);
+        total += sub;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = '<span>' + item.name + ' ×' + item.number + '</span><span class="sub">' + yuan(sub) + '</span>';
+        cartItems.appendChild(div);
+      });
+      cartTotal.textContent = yuan(total);
+    } else {
+      cartItems.innerHTML = '<div class="cart-empty">购物车是空的</div>';
+      cartTotal.textContent = yuan(0);
+    }
+  } catch (e) { /* ignore */ }
+}
+
+sendBtn.onclick = () => { const v = input.value; input.value = ''; chat(v); };
+input.addEventListener('keydown', e => { if (e.key === 'Enter') sendBtn.click(); });
+chips.addEventListener('click', e => { if (e.target.classList.contains('chip')) chat(e.target.textContent); });
+
+// 开场白
+addMsg('ai', '你好，我是禾巷餐饮的 AI 点餐助手～\n可以让我推荐菜品、回答菜单问题，也可以直接帮我点餐加购。试试下面几个快捷问题？');
+</script>
+</body>
+</html>

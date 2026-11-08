@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>售后 Agent · 禾巷餐饮本地演示</title>
+  <style>
+    :root{font:16px/1.55 system-ui,"Microsoft YaHei",sans-serif;color:#172d3b;background:#eff5f4}
+    *{box-sizing:border-box}body{margin:0}.app{max-width:960px;min-height:100vh;margin:auto;background:#fff;display:flex;flex-direction:column;box-shadow:0 12px 40px #17394b14}
+    header{padding:20px 24px;background:#123b45;color:#fff;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+    h1{font-size:22px;margin:0}header p{margin:3px 0 0;color:#c6e6dd;font-size:13px}header a{color:#c7f2e4;font-size:13px}
+    .notice{margin:18px 24px 0;padding:13px 16px;border-radius:10px;background:#fff5e7;border:1px solid #f0d5a5;font-size:14px}
+    .notice strong{color:#884e13}.examples{display:flex;gap:8px;flex-wrap:wrap;padding:16px 24px 8px}
+    button{cursor:pointer;font:inherit}.example,.secondary{border:1px solid #b6d3ce;border-radius:9px;padding:8px 12px;background:#fff;color:#12695e}
+    .example:hover,.secondary:hover{background:#eaf8f4}.messages{flex:1;min-height:300px;max-height:65vh;overflow:auto;padding:12px 24px}
+    .message{display:flex;margin:12px 0}.message.user{justify-content:flex-end}.bubble{max-width:min(720px,88%);padding:12px 15px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#eef4f3}
+    .user .bubble{background:#087f79;color:#fff}.trace{display:block;color:#476575;font-size:12px;margin-top:8px}.user .trace{color:#d8f6ef}
+    .input{border-top:1px solid #dce9e6;padding:16px 24px 22px}.input textarea{width:100%;min-height:85px;resize:vertical;border:1px solid #b9d0cb;border-radius:10px;padding:12px;font:inherit}
+    .actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:9px}.primary{border:0;background:#087f79;color:#fff;border-radius:9px;padding:9px 20px}.primary:disabled,.secondary:disabled{opacity:.5;cursor:not-allowed}
+    .status{color:#4b6872;font-size:12px}.spacer{flex:1}.privacy{color:#687d83;font-size:12px;margin:8px 0 0}
+    @media(max-width:640px){header,.messages,.input{padding-left:16px;padding-right:16px}.notice{margin-left:16px;margin-right:16px}.examples{padding-left:16px;padding-right:16px}.bubble{max-width:94%}}
+    body{background:radial-gradient(circle at 12% 0,#e0eee2,transparent 33%),#f3f5ee}
+    .app{max-width:1080px;background:#fcfcf8;box-shadow:0 22px 70px #183d3020}
+    header{position:relative;overflow:hidden;min-height:162px;padding:30px 34px;background:linear-gradient(128deg,#123e35,#23745c);align-items:flex-start}
+    header::after{content:"禾";position:absolute;right:120px;top:-92px;font-size:250px;font-weight:900;color:#ffffff0b;pointer-events:none}
+    header h1{font-size:30px;letter-spacing:.02em}header p{margin-top:9px;color:#c8e4d4;font-size:14px}
+    header a{z-index:1;padding:10px 13px;border:1px solid #ffffff55;border-radius:10px;color:#f0fff4;text-decoration:none}
+    .capability-ribbon{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:21px 34px 0;color:#235a47;font-size:13px;font-weight:700}
+    .capability-ribbon span{padding:7px 11px;background:#e7f0e7;border-radius:999px}.capability-ribbon i{color:#85a393;font-style:normal}
+    .notice{margin:20px 34px 0;background:#fff5e9;border-color:#f0dcc2;border-left:4px solid #d99a50;border-radius:12px}
+    .examples{padding:20px 34px 9px}.example,.secondary{border-color:#cbdccf;color:#205e4c;border-radius:11px}.example:hover,.secondary:hover{background:#e8f2e9}
+    .messages{padding:15px 34px;min-height:330px}.bubble{border-radius:16px;background:#eaf1e9}.user .bubble{background:#236b55;color:#fff}
+    .input{padding:19px 34px 25px;background:#fff;border-top-color:#dce8dc}.input textarea{background:#fafbf7;border-color:#ccdccc;border-radius:13px}
+    .primary{background:#195a49;border-radius:11px}.primary:hover{background:#27745b}.status,.privacy{color:#688076}
+    @media(max-width:640px){header{padding:23px 18px;min-height:165px}header h1{font-size:24px}header a{font-size:12px}.capability-ribbon{padding:18px 16px 0}.notice{margin:16px 16px 0}.examples,.messages,.input{padding-left:16px;padding-right:16px}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header><div><h1>禾巷餐饮 · 售后客服 Agent</h1><p>Python Agent + Java 订单服务 · 本地演示</p></div><a href="/ai-chat.html">去看另一条路线：Java AI 点餐助手 →</a></header>
+  <div class="capability-ribbon" aria-label="可体验的服务链路"><span>查询订单</span><i>→</i><span>核对明细</span><i>→</i><span>登记人工工单</span></div>
+  <div class="notice"><strong>演示边界：</strong>当前开发环境使用演示用户 1，聊天会调用模型并产生费用；“创建工单”会写入本地演示数据库。请先用下面的只读问题体验。页面不是正式登录用户端，也不能用来验证生产权限。</div>
+  <div class="examples"><button class="example" type="button">我的订单有哪些？</button><button class="example" type="button">刚才那单有什么菜？</button><button class="example" type="button">你们支持 Apple Pay 吗？</button></div>
+  <div class="messages" id="messages" aria-live="polite"></div>
+  <form class="input" id="chat-form">
+    <label for="message">发送给售后 Agent</label>
+    <textarea id="message" maxlength="2000" placeholder="例如：帮我查一下最近的订单"></textarea>
+    <div class="actions"><button class="primary" id="send" type="submit">发送</button><button class="secondary" id="retry" type="button" disabled>重试上一条（复用请求 ID）</button><span class="spacer"></span><button class="secondary" id="new-session" type="button">新会话</button></div>
+    <p class="status" id="status">就绪。连续追问会使用同一个会话；刷新页面仍保留该会话 ID。</p>
+    <p class="privacy">仅保存会话 ID 与待重试的消息在本机浏览器；页面不保存聊天正文。新会话会重置上下文，但不会删除已创建的工单。</p>
+  </form>
+</main>
+<script>
+(() => {
+  const sessionKey = 'sky-service-agent-demo-session';
+  const pendingKey = 'sky-service-agent-demo-pending';
+  const messages = document.getElementById('messages');
+  const input = document.getElementById('message');
+  const send = document.getElementById('send');
+  const retry = document.getElementById('retry');
+  const status = document.getElementById('status');
+  const makeId = () => crypto.randomUUID();
+  let sessionId = sessionStorage.getItem(sessionKey) || makeId();
+  let pending = null;
+  let busy = false;
+  sessionStorage.setItem(sessionKey, sessionId);
+  try { pending = JSON.parse(sessionStorage.getItem(pendingKey) || 'null'); } catch (_) { sessionStorage.removeItem(pendingKey); }
+  retry.disabled = !pending;
+
+  function add(role, text, tools) {
+    const row = document.createElement('div'); row.className = 'message ' + role;
+    const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = text;
+    if (tools && tools.length) { const trace = document.createElement('span'); trace.className = 'trace'; trace.textContent = '本轮工具：' + tools.join(' → '); bubble.appendChild(trace); }
+    row.appendChild(bubble); messages.appendChild(row); messages.scrollTop = messages.scrollHeight;
+    return bubble;
+  }
+  function setPending(value) { pending = value; if (value) sessionStorage.setItem(pendingKey, JSON.stringify(value)); else sessionStorage.removeItem(pendingKey); retry.disabled = busy || !value; }
+  function setBusy(value) { busy = value; send.disabled = value; retry.disabled = value || !pending; input.disabled = value; if (value) status.textContent = 'Agent 正在处理，首次 FAQ 检索可能较慢。请勿重复发送。'; else if (status.textContent.startsWith('Agent 正在处理')) status.textContent = '就绪。'; }
+  async function run(item, isRetry) {
+    if (busy) return;
+    setPending(item); setBusy(true);
+    if (!isRetry) add('user', item.message);
+    const bubble = add('ai', '正在处理…');
+    try {
+      if (isRetry) {
+        const receiptResponse = await fetch('/user/service/ticket-result?requestId=' + encodeURIComponent(item.requestId), {method:'GET'});
+        const receipt = await receiptResponse.json();
+        if (!receiptResponse.ok || receipt.code !== 1 || !receipt.data) throw new Error('原工单结果核对失败，已保留请求 ID');
+        if (receipt.data.outcome === 'completed') {
+          bubble.textContent = receipt.data.reply;
+          setPending(null);
+          status.textContent = '已取回原工单，本次未重复提交。';
+          return;
+        }
+        if (receipt.data.outcome !== 'unknown') throw new Error('工单核对状态不完整');
+      }
+      const response = await fetch('/user/service/chat-python', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(item)});
+      const body = await response.json();
+      if (!response.ok || body.code !== 1 || !body.data) throw new Error(body.msg || 'HTTP ' + response.status);
+      bubble.textContent = body.data.reply || 'Agent 未返回文字。';
+      if (Array.isArray(body.data.toolCalls) && body.data.toolCalls.length) { const trace = document.createElement('span'); trace.className = 'trace'; trace.textContent = '本轮工具：' + body.data.toolCalls.join(' → '); bubble.appendChild(trace); }
+      if (body.data.outcome === 'completed') {
+        setPending(null);
+      } else {
+        status.textContent = '处理结果未确认；已保留请求 ID，可先核对原工单。';
+      }
+    } catch (error) {
+      bubble.textContent = '未收到明确结果：' + error.message + '。不要把超时当作操作失败；如需重试，请使用下方按钮复用相同请求 ID。';
+      status.textContent = '上次结果未知，可使用“重试上一条”。';
+    } finally { setBusy(false); }
+  }
+  document.getElementById('chat-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const message = input.value.trim(); if (!message || busy) return;
+    if (pending && !confirm('上一条请求结果尚未确认。发送新消息会放弃它的重试 ID，仍要继续吗？')) return;
+    const item = {message, sessionId, requestId:makeId()};
+    input.value = ''; run(item, false);
+  });
+  retry.addEventListener('click', () => { if (pending) run(pending, true); });
+  document.getElementById('new-session').addEventListener('click', () => {
+    if (busy) return;
+    if (!confirm('开始新会话？这不会删除已创建的工单。')) return;
+    sessionId = makeId(); sessionStorage.setItem(sessionKey, sessionId); setPending(null); messages.replaceChildren(); add('ai', '新会话已开始。你可以先问“我的订单有哪些？”。');
+  });
+  document.querySelectorAll('.example').forEach(button => button.addEventListener('click', () => { input.value = button.textContent; input.focus(); }));
+  add('ai', '你好，我是禾巷餐饮售后助手。可以帮你查订单、查看明细或检索常见问题。先试试“我的订单有哪些？”。');
+  if (pending) status.textContent = '检测到上次未确认的请求；可点击“重试上一条”复用请求 ID。';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# syntax=docker/dockerfile:1.7
+# 本机已有 Maven 编译产物时的联调捷径；可复现的完整构建仍使用 Dockerfile.java。
+# 先在仓库根目录运行：mvn -pl sky-server -am package -DskipTests
+# 再运行：docker build --build-context localjar=./sky-server/target -f Dockerfile.java.local -t sky-take-out-java:1.0 .
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+COPY --from=localjar /sky-server-1.0-SNAPSHOT.jar /app/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

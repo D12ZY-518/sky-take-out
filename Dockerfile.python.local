@@ -1,0 +1,8 @@
+# syntax=docker/dockerfile:1.7
+# 本机已安装 RAG/Agent 依赖的镜像更新入口；完整构建仍使用 python-agent/Dockerfile。
+# docker build -f Dockerfile.python.local -t sky-take-out-python-agent:1.0 ./python-agent
+# 构建前记录依赖镜像 ID；该入口复用依赖，不升级或重新下载模型/第三方包。
+ARG AGENT_RUNTIME_IMAGE=sky-take-out-python-agent:1.0
+FROM ${AGENT_RUNTIME_IMAGE}
+WORKDIR /app
+COPY . /app

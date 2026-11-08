@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>售后工单 · 禾巷餐饮</title>
+  <style>
+    :root{font-family:system-ui,"Microsoft YaHei",sans-serif;color:#203a33;background:#f7f5ee}
+    *{box-sizing:border-box} body{margin:0} header{background:#ffbd00;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px} h1{font-size:22px;margin:0} header a{color:#243047;text-decoration:none;font-weight:600} main{max-width:1180px;margin:28px auto;padding:0 20px} .notice{background:#fff9e8;border:1px solid #ecd486;border-radius:8px;padding:14px 18px;line-height:1.6;margin-bottom:18px} .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0} button,select{font:inherit;border:1px solid #cdd3dc;background:#fff;border-radius:6px;padding:8px 12px;cursor:pointer} button.primary{background:#23344c;color:#fff;border-color:#23344c} button:disabled{opacity:.45;cursor:not-allowed} .panel{background:#fff;border:1px solid #e1e4e9;border-radius:8px;overflow:auto} table{width:100%;border-collapse:collapse;min-width:920px} th,td{padding:13px 12px;text-align:left;border-bottom:1px solid #edf0f3;vertical-align:top} th{background:#fafbfc;color:#546073;white-space:nowrap} td.content{max-width:300px;white-space:pre-wrap;overflow-wrap:anywhere} .muted{color:#687488} .pill{display:inline-block;border-radius:12px;padding:3px 9px;background:#edf0f5;white-space:nowrap} .pill.pending{background:#fff0d0;color:#8c5700}.pill.processing{background:#e8f3ff;color:#185687}.pill.finished{background:#e7f6ea;color:#17653a} .pager{display:flex;gap:12px;align-items:center;justify-content:flex-end;padding:15px} #message{min-height:24px} .error{color:#b52828} @media(max-width:650px){header{padding:14px 18px}main{margin:16px auto;padding:0 12px}}
+    body{background:radial-gradient(circle at 88% 0,#e6efe3,transparent 28%),#f7f5ee}
+    header{background:#143e35;color:#fff;padding:26px max(28px,calc((100vw - 1180px)/2));min-height:130px}
+    header h1{font-size:29px;letter-spacing:.02em}header p{margin:6px 0 0;color:#b9d7c8;font-size:13px}
+    header .eyebrow{font-size:11px;letter-spacing:.24em;color:#a9cbb9;font-weight:700}
+    header a{color:#e6f3e9;background:#ffffff1a;border:1px solid #ffffff36;padding:10px 14px;border-radius:10px;font-size:13px}
+    main{margin-top:32px}.notice{background:#e8f2e9;border-color:#cce1cf;border-left:4px solid #2f8064;border-radius:12px;color:#355a4c}
+    .flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:26px}
+    .flow div{background:#fff;border:1px solid #e4ebe2;border-radius:14px;padding:16px 18px;box-shadow:0 8px 22px #123e3508}
+    .flow strong{display:block;color:#185f4b;font-size:14px}.flow span{display:block;color:#708279;font-size:12px;margin-top:5px;line-height:1.5}
+    .bar{margin:22px 0 15px}.bar label{font-weight:700}.bar select{min-width:128px}
+    button,select{border-color:#cbdacf;border-radius:10px;color:#23483a}button.primary{background:#195a49;border-color:#195a49;color:#fff}button:hover:not(:disabled){border-color:#2a7b62}
+    .panel{border-color:#e1e9df;border-radius:16px;box-shadow:0 12px 30px #123e350b}
+    th{background:#edf4eb;color:#446552}th,td{padding:16px 14px}td{border-bottom-color:#edf1e9}
+    .pill.pending{background:#fff1d9;color:#8e5a1b}.pill.processing{background:#e0f0ee;color:#176b67}.pill.finished{background:#e5f1e6;color:#266842}
+    @media(max-width:650px){header{padding:22px 18px}header h1{font-size:23px}.flow{grid-template-columns:1fr}.flow div{padding:12px 15px}}
+  </style>
+</head>
+<body>
+  <header><div><span class="eyebrow">HEXIANG · SERVICE DESK</span><h1>售后工单工作台</h1><p>顾客诉求由 Agent 收集，处理决定留给商家。</p></div><a href="/#/dashboard">← 返回运营工作台</a></header>
+  <main>
+    <div class="notice">这里展示 Python 售后 Agent 经 Java 创建的工单。Agent 可以协助收集诉求，但处理决定仍由商家作出。此页面是本地演示入口，不包含退款或支付操作；请勿把工单状态“已完结”等同于已退款。</div>
+    <div class="flow" aria-label="工单处理流程"><div><strong>01 · 收到诉求</strong><span>Agent 登记问题和关联订单，等待人工核实。</span></div><div><strong>02 · 人工处理中</strong><span>商家核对订单与实际情况，再决定处理方式。</span></div><div><strong>03 · 标记完结</strong><span>仅表示工单状态结束，不代表退款或补送完成。</span></div></div>
+    <div class="bar"><label for="status">状态筛选</label><select id="status"><option value="">全部</option><option value="1">待处理</option><option value="2">处理中</option><option value="3">已完结</option></select><button id="refresh" class="primary">刷新</button><span id="message" role="status"></span></div>
+    <div class="panel"><table><thead><tr><th>工单号 / 时间</th><th>用户 / 订单</th><th>类别</th><th>诉求内容</th><th>状态</th><th>操作</th></tr></thead><tbody id="rows"></tbody></table><div class="pager"><button id="previous">上一页</button><span id="page-info"></span><button id="next">下一页</button></div></div>
+  </main>
+  <script>
+  (() => {
+    const rows = document.getElementById('rows');
+    const message = document.getElementById('message');
+    const pageInfo = document.getElementById('page-info');
+    const pageSize = 20;
+    let page = 1;
+    let total = 0;
+    const labels = {1:'待处理',2:'处理中',3:'已完结'};
+    const classes = {1:'pending',2:'processing',3:'finished'};
+    const token = () => {
+      const pair = document.cookie.split('; ').find(item => item.startsWith('token='));
+      return pair ? decodeURIComponent(pair.slice(6)) : '';
+    };
+    function show(text, error=false) { message.textContent=text; message.className=error?'error':''; }
+    async function request(url, options={}) {
+      if (!token()) throw new Error('请先返回商家工作台登录，再打开售后工单。');
+      const response = await fetch(url, {...options, headers:{token:token(),'Content-Type':'application/json'}});
+      if (response.status===401) throw new Error('商家登录已失效，请重新登录。');
+      if (!response.ok) throw new Error('服务暂时不可用（HTTP '+response.status+'）。');
+      const result = await response.json();
+      if (result.code!==1) throw new Error(result.msg||'操作失败，请刷新后重试。');
+      return result.data;
+    }
+    function cell(row, text, className='') {
+      const td=document.createElement('td'); td.textContent=String(text??'—');
+      if(className) td.className=className; row.appendChild(td); return td;
+    }
+    function render(tickets) {
+      rows.replaceChildren();
+      if (!tickets.length) {
+        const tr=document.createElement('tr'); const td=cell(tr,'当前筛选下没有工单。'); td.colSpan=6; td.className='muted'; rows.appendChild(tr);
+      }
+      for (const ticket of tickets) {
+        const tr=document.createElement('tr');
+        cell(tr,`${ticket.ticketNo}\n${ticket.createTime||''}`).style.whiteSpace='pre-line';
+        cell(tr,`用户 ${ticket.userId}${ticket.orderNumber?'\n订单 '+ticket.orderNumber:''}`).style.whiteSpace='pre-line';
+        cell(tr,ticket.category); cell(tr,ticket.content,'content');
+        const status=cell(tr,''); const pill=document.createElement('span');
+        pill.className='pill '+(classes[ticket.status]||''); pill.textContent=labels[ticket.status]||'未知'; status.appendChild(pill);
+        const action=cell(tr,'');
+        if (ticket.status===1 || ticket.status===2) {
+          const next=ticket.status+1; const button=document.createElement('button');
+          button.textContent=next===2?'开始处理':'标记完结';
+          button.addEventListener('click',async()=>{
+            if (!confirm(`确认将工单 ${ticket.ticketNo} 更新为“${labels[next]}”？`)) return;
+            button.disabled=true;
+            try { await request(`/api/tickets/${ticket.id}/status`,{method:'PUT',body:JSON.stringify({status:next})}); show('工单状态已更新。'); await load(); }
+            catch(error) { show(error.message,true); button.disabled=false; }
+          });
+          action.appendChild(button);
+        }
+        rows.appendChild(tr);
+      }
+      const pages=Math.max(1,Math.ceil(total/pageSize));
+      pageInfo.textContent=`第 ${page} / ${pages} 页，共 ${total} 条`;
+      document.getElementById('previous').disabled=page<=1;
+      document.getElementById('next').disabled=page>=pages;
+    }
+    async function load() {
+      show('正在加载…');
+      try {
+        const filter=document.getElementById('status').value;
+        const params=new URLSearchParams({page:String(page),pageSize:String(pageSize)});
+        if(filter) params.set('status',filter);
+        const data=await request('/api/tickets?'+params);
+        total=data.total; render(data.records||[]); show('');
+      } catch(error) { rows.replaceChildren(); show(error.message,true); }
+    }
+    document.getElementById('status').addEventListener('change',()=>{page=1;load()});
+    document.getElementById('refresh').addEventListener('click',load);
+    document.getElementById('previous').addEventListener('click',()=>{if(page>1){page--;load()}});
+    document.getElementById('next').addEventListener('click',()=>{if(page*pageSize<total){page++;load()}});
+    load();
+  })();
+  </script>
+</body>
+</html>

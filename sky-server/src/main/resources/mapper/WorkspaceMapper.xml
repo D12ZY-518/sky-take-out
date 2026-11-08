@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.WorkspaceMapper">
+    <!-- ①②③ 查 orders；营业额和有效订单记得 status = 5；
+         窗口条件：order_time &gt;= #{begin} and order_time &lt; #{end}
+         （end=明天0点，半开区间——昨天 day11 的口径直接抄） -->
+    <select id="getTurnover" resultType="java.lang.Double">
+        select sum(amount)
+        from orders
+        where order_time &gt;= #{begin} and order_time &lt; #{end}
+        and status = 5
+    </select>     
+    <!-- ④ 查 user；create_time 同窗口 -->
+    <select id="getNewUsers" resultType="java.lang.Integer">
+        select count(*)
+        from user
+        where create_time &gt;= #{begin} and create_time &lt; #{end}
+    </select>
+    <!-- ⑤⑥⑦ count by status，表名分别是 orders/dish/setmeal -->
+    <select id="getOrderCount" resultType="java.lang.Integer">
+        select count(*)
+        from orders
+        where order_time &gt;= #{begin} and order_time &lt; #{end}
+    </select>
+    <select id="getValidOrderCount" resultType="java.lang.Integer">
+        select count(*)
+        from orders
+        where order_time &gt;= #{begin} and order_time &lt; #{end}
+        and status = 5
+    </select>
+    <select id="countDishByStatus" resultType="java.lang.Integer">
+        select count(*)
+        from dish
+        where status = #{status}
+    </select>
+    <select id="countSetmealByStatus" resultType="java.lang.Integer">
+        select count(*)
+        from setmeal
+        where status = #{status}
+    </select>
+    <select id="countOrderByStatus" resultType="java.lang.Integer">
+        select count(*)
+        from orders
+        <where>
+            <if test="status != null">and status = #{status}</if>
+        </where>    
+    </select>
+</mapper>
